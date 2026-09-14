@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  width: 100%;
+  height: 100%;
+  background-color: #f8fff9;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+  overflow: hidden;
+}
+
+.page-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: #ffffff;
+}
+
+/* 왼쪽 사이드바 영역 */
+.sidebar-section {
+  width: 280px;
+  height: 100%;
+  background-color: #f4fbf4; /* 필요시 배경색 지정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 50px;
+  padding-left: 30px;
+  flex-shrink: 0;
+}
+
+/* 개별 버튼들을 나열하는 래퍼 */
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 170px;
+}
+
+.nav-item {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 각각의 이미지 크기와 비율 유지 */
+.nav-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* 오른쪽 메인 장소 화면 영역 */
+.main-section {
+  flex-grow: 1;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-container {
+  width: 85%;
+  height: 85%;
+  max-width: 1300px;
+  max-height: 800px;
+  position: absolute;
+  background-color: transparent;
+}
