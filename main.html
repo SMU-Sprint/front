@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint | 메인</title>
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body data-page="main">
+  <div id="sidebar-container"></div>
+  <main class="app-shell dashboard">
+
+    <section class="mini-calendars" aria-label="이전 운동 잔디">
+      <article class="mini-card">
+        <h2>7월</h2>
+        <div class="mini-grid" data-filled="0"></div>
+      </article>
+      <article class="mini-card">
+        <h2>8월</h2>
+        <div class="mini-grid" data-filled="0"></div>
+      </article>
+    </section>
+
+    <section class="calendar-card">
+      <header class="calendar-head">
+        <h1>9월</h1>
+        <div class="legend"><span>Less</span>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i><span>More</span>
+        </div>
+      </header>
+      <div class="week">
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thr</span>
+        <span>Fri</span>
+        <span>Sat</span>
+      </div>
+      <div class="month-grid" aria-label="금월 운동 잔디"></div>
+    </section>
+
+    <aside class="session-card">
+      <div class="date"><strong>2026/09/12</strong><span>토요일</span></div>
+      <div class="exercise">테니스</div>
+      <div class="time"><span>시작</span><strong>19:05:17</strong></div>
+      <div class="elapsed"><span>경과시간</span><strong>1:16:09</strong></div>
+    </aside>
+  </main>
+  <script>
+    const days = ['Sun','Mon','Tue','Wed','Thr','Fri','Sat'];
+    document.querySelectorAll('.mini-grid').forEach((grid) => {
+      grid.innerHTML = days.map(d => `<small>${d}</small>`).join('') + '<i></i>'.repeat(35);
+    });
+    const month = document.querySelector('.month-grid');
+    month.innerHTML = '<i></i>'.repeat(35);
+    [29,30,31,32,33].forEach((n, index) => month.children[n].classList.add(`level-${index + 1}`));
+  </script>
+</body>
+</html>

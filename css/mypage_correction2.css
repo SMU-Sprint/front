@@ -1,0 +1,82 @@
+.correction-form {
+margin-left: 160px;  
+padding: 90px 123px 80px;
+}
+.correction-form form {
+  max-width: 900px;
+}
+.correction-form label {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  align-items: center;
+  min-height: 65.33px;
+  border-bottom: 2px solid var(--main4);
+}
+.correction-form label:last-of-type {
+  border-bottom: 0;
+}
+.correction-form span {
+  padding-left: 20px;
+  color: var(--main4);
+  font-size: 20px;
+}
+.correction-form input {
+  width: 100%;
+  padding: 0 20px;
+  border: 0;
+  outline: 0;
+  text-align: right;
+  font-size: 19px;
+  background: transparent;
+}
+.value-with-unit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.value-with-unit input {
+  width: auto;
+  min-width: 0;
+  padding-right: 2px;
+}
+
+.value-with-unit span {
+  padding-left: 0;
+  color: #000;
+  font-size: 19px;
+}
+
+
+.correction-form button {
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 860px;
+  height: 40px;
+  margin-top: 130px;
+  color: var(--base);
+  background: var(--main4);
+  font-size: 30px; 
+  border-radius: 90px;
+}
+@media (max-width: 760px) {
+  .correction-form {
+    padding: 30px 18px 110px;
+  }
+  .correction-form label {
+    grid-template-columns: 1fr 1fr;
+  }
+  .correction-form span {
+    padding-left: 4px;
+    font-size: 16px;
+  }
+  .correction-form input {
+    padding-right: 4px;
+    font-size: 16px;
+  }
+  .correction-form button {
+    margin-top: 70px;
+  }
+}
