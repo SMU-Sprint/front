@@ -5,24 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>장소</title>
     <link rel="stylesheet" href="../css/location.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
+    <script src="../js/app.js" defer></script>
   </head>
 
-  <body>
+  <body data-page="place">
     <div class="page-wrapper">
       <!-- 사이드바 영역: 배경 없이 개별 버튼 이미지 세 개를 수직 나열 -->
-      <aside class="sidebar-section">
-        <nav class="nav-links">
-          <a href="main.html" class="nav-item">
-            <img src="../images/main_off.png" alt="메인" class="nav-img" />
-          </a>
-          <a href="location.html" class="nav-item">
-            <img src="../images/location_on.png" alt="장소" class="nav-img" />
-          </a>
-          <a href="mypage.html" class="nav-item">
-            <img src="../images/mypage_off.png" alt="마이" class="nav-img" />
-          </a>
-        </nav>
-      </aside>
+      <div id="sidebar-container"></div>
 
       <!-- 오른쪽 메인 장소/지도 영역 (location.png) -->
       <section

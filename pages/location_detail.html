@@ -5,24 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>장소 - 상세 정보</title>
     <link rel="stylesheet" href="../css/location_detail.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
+    <script src="../js/app.js" defer></script>
   </head>
 
-  <body>
+  <body data-page="place">
     <div class="page-wrapper">
-      <!-- 사이드바 영역 -->
-      <aside class="sidebar-section">
-        <nav class="nav-links">
-          <a href="main.html" class="nav-item">
-            <img src="../images/main_off.png" alt="메인" class="nav-img" />
-          </a>
-          <a href="location.html" class="nav-item">
-            <img src="../images/location_on.png" alt="장소" class="nav-img" />
-          </a>
-          <a href="mypage.html" class="nav-item">
-            <img src="../images/mypage_off.png" alt="마이" class="nav-img" />
-          </a>
-        </nav>
-      </aside>
+      <div id="sidebar-container"></div>
 
       <!-- 오른쪽 메인 장소/지도 영역 -->
       <section
@@ -43,37 +32,21 @@
         </div>
 
         <!-- 4개 구역으로 균등 분배된 우측 패널 -->
-        <div class="info-panel">
-          <!-- 1구역: 날짜 및 요일 -->
-          <div class="info-section">
-            <span id="dateText" class="date-main">2026/09/14</span>
-            <span id="dayText" class="day-sub">월요일</span>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- 2구역: 운동 종목 -->
-          <div class="info-section">
-            <span id="sportText" class="sport-name">테니스</span>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- 3구역: 시작하기 버튼 -->
-          <div class="info-section">
-            <button type="button" id="startBtn" class="action-btn start-btn">
-              시작하기
-            </button>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- 4구역: 종료하기 버튼 -->
-          <div class="info-section">
-            <button type="button" id="endBtn" class="action-btn end-btn">
-              종료하기
-            </button>
-          </div>
+        <aside class="info-panel">
+  <div class="info-section">
+    <div class="date-main">2026/09/15</div>
+    <div class="day-sub">화요일</div>
+  </div>
+  <div class="info-section">
+    <div class="sport-name">테니스</div>
+  </div>
+  <div class="info-section">
+    <button class="action-btn start-btn">시작하기</button>
+  </div>
+  <div class="info-section">
+    <button class="action-btn end-btn">종료하기</button>
+  </div>
+</aside>
         </div>
       </section>
     </div>
