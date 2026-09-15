@@ -1,9 +1,14 @@
 .mypage {
-  margin-left: 160px;
-  padding: 35px 50px 30px;
+  width: calc(100vw - 160px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .profile-card {
   display: grid;
+  width: 900px;
   grid-template-columns: 200px 1fr;
   gap: 45px;
   align-items: center;
@@ -38,7 +43,7 @@
 .profile-grid div:nth-child(n + 3) {
   border-bottom: 0;
 }
-.profile-grid span, 
+.profile-grid span,
 .preferences span {
   color: var(--main4);
   font-size: 20px;
@@ -49,10 +54,9 @@
   font-weight: 500;
 }
 
-
-.preferences, 
+.preferences,
 .actions {
-  max-width: 1000px;
+  width: 900px;
   max-height: 200px;
 }
 .preferences div {
@@ -99,7 +103,6 @@
   background: var(--highlight);
 }
 
-
 .confirm-modal {
   width: min(900px, 82vw);
   padding: 0;
@@ -107,7 +110,7 @@
   background: transparent;
 }
 .confirm-modal::backdrop {
-  background:rgba(2, 2, 2, 0.28);
+  background: rgba(2, 2, 2, 0.28);
 }
 .modal-box {
   padding: 35px 38px;

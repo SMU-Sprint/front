@@ -1,5 +1,4 @@
 .dashboard {
-  margin-left: 160px;
   display: grid;
   grid-template-columns: 260px minmax(390px, 400px) minmax(280px, 280px);
   justify-content: space-evenly;

@@ -1,9 +1,11 @@
 .correction-form {
-margin-left: 160px;  
-padding: 90px 123px 80px;
-}
-.correction-form form {
-  max-width: 900px;
+  margin-left: 160px;
+  width: calc(100% - 160px);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 .correction-form label {
   display: grid;
@@ -48,9 +50,8 @@ padding: 90px 123px 80px;
   font-size: 19px;
 }
 
-
 .correction-form button {
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 860px;
@@ -58,7 +59,7 @@ padding: 90px 123px 80px;
   margin-top: 130px;
   color: var(--base);
   background: var(--main4);
-  font-size: 30px; 
+  font-size: 30px;
   border-radius: 90px;
 }
 @media (max-width: 760px) {
