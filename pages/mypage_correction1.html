@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sprint | 정보 수정 인증</title>
-    <link rel="stylesheet" href="css/sidebar.css" />
-    <link rel="stylesheet" href="css/mypage_correction1.css" />
-    <script src="js/app.js" defer></script>
+    <link rel="stylesheet" href="../css/sidebar.css" />
+    <link rel="stylesheet" href="../css/mypage_correction1.css" />
+    <script src="../js/app.js" defer></script>
   </head>
   <body data-page="mypage-correction1">
     <div id="sidebar-container"></div>
@@ -14,45 +14,25 @@
       <section class="auth-box">
         <h1>정보 수정하기</h1>
         <div class="auth-row">
-        <input
-            type="email"
-            id="email"
-            placeholder="이메일"
-        />
-        <button
-            type="button"
-            id="send-code-btn"
-            class="auth-btn"
-        >
+          <input type="email" id="email" placeholder="이메일" />
+          <button type="button" id="send-code-btn" class="auth-btn">
             인증번호 받기
-        </button>
+          </button>
         </div>
 
         <div class="auth-row">
-        <input
+          <input
             type="text"
             id="verification-code"
             placeholder="인증번호"
             disabled
-        />
-        <button
-            type="button"
-            id="verify-code-btn"
-            class="auth-btn"
-            disabled
-        >
+          />
+          <button type="button" id="verify-code-btn" class="auth-btn" disabled>
             인증번호 확인
-        </button>
+          </button>
         </div>
 
-        <button
-        type="button"
-        id="next-btn"
-        class="next"
-        disabled
-        >
-        다음
-        </button>
+        <button type="button" id="next-btn" class="next" disabled>다음</button>
       </section>
     </main>
   </body>
