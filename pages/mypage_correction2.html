@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sprint | 정보 수정</title>
+    <link rel="stylesheet" href="../css/sidebar.css" />
+    <link rel="stylesheet" href="../css/mypage_correction2.css" />
+    <script src="../js/app.js" defer></script>
+  </head>
+  <body data-page="mypage-correction2">
+    <div id="sidebar-container"></div>
+    <main class="app-shell correction-form">
+      <form>
+        <label>
+          <span>나이</span>
+          <div class="value-with-unit">
+            <input type="number" value="00" />
+            <span>세</span>
+          </div>
+        </label>
+
+        <label>
+          <span>키</span>
+          <div class="value-with-unit">
+            <input type="number" value="000" />
+            <span>cm</span>
+          </div>
+        </label>
+
+        <label>
+          <span>몸무게</span>
+          <div class="value-with-unit">
+            <input type="number" value="00" />
+            <span>kg</span>
+          </div>
+        </label>
+
+        <label class="select-field">
+          <span>운동지역</span>
+          <button
+            type="button"
+            class="select-trigger"
+            data-target="region-panel"
+          >
+            서울
+          </button>
+          <div class="select-panel region-panel" id="region-panel">
+            <button type="button">서울</button>
+            <button type="button">경기</button>
+            <button type="button">인천</button>
+            <button type="button">부산</button>
+            <button type="button">대구</button>
+            <button type="button">대전</button>
+            <button type="button">광주</button>
+            <button type="button">울산</button>
+            <button type="button">세종</button>
+          </div>
+        </label>
+
+        <label class="select-field">
+          <span>선호하는 운동 요일</span>
+          <button type="button" class="select-trigger" data-target="day-panel">
+            월, 수, 금, 토
+          </button>
+          <div class="select-panel day-panel" id="day-panel">
+            <button type="button" data-value="월">월</button>
+            <button type="button" data-value="화">화</button>
+            <button type="button" data-value="수">수</button>
+            <button type="button" data-value="목">목</button>
+            <button type="button" data-value="금">금</button>
+            <button type="button" data-value="토">토</button>
+            <button type="button" data-value="일">일</button>
+          </div>
+        </label>
+
+        <label class="select-field">
+          <span>선호하는 운동 시간대</span>
+          <button type="button" class="select-trigger" data-target="time-panel">
+            17시, 18시, 19시
+          </button>
+          <div class="select-panel time-panel" id="time-panel">
+            <button type="button" data-value="06시">06시</button>
+            <button type="button" data-value="07시">07시</button>
+            <button type="button" data-value="08시">08시</button>
+            <button type="button" data-value="09시">09시</button>
+            <button type="button" data-value="10시">10시</button>
+            <button type="button" data-value="11시">11시</button>
+            <button type="button" data-value="12시">12시</button>
+            <button type="button" data-value="13시">13시</button>
+            <button type="button" data-value="14시">14시</button>
+            <button type="button" data-value="15시">15시</button>
+            <button type="button" data-value="16시">16시</button>
+            <button type="button" data-value="17시">17시</button>
+            <button type="button" data-value="18시">18시</button>
+            <button type="button" data-value="19시">19시</button>
+            <button type="button" data-value="20시">20시</button>
+            <button type="button" data-value="21시">21시</button>
+            <button type="button" data-value="22시">22시</button>
+            <button type="button" data-value="23시">23시</button>
+            <button type="button" data-value="24시">24시</button>
+          </div>
+        </label>
+        <button
+          type="button"
+          class="submit-btn"
+          onclick="location.href = 'mypage.html'"
+        >
+          수정완료
+        </button>
+      </form>
+    </main>
+  </body>
+</html>
+<script>
+  const triggers = document.querySelectorAll(".select-trigger");
+  const panels = document.querySelectorAll(".select-panel");
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const targetId = trigger.dataset.target;
+      const targetPanel = document.getElementById(targetId);
+
+      panels.forEach((panel) => {
+        if (panel !== targetPanel) {
+          panel.classList.remove("open");
+        }
+      });
+
+      targetPanel.classList.toggle("open");
+    });
+  });
+
+  // 운동지역
+  document.querySelectorAll(".region-panel button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const panel = button.closest(".region-panel");
+      const trigger = panel.parentElement.querySelector(".select-trigger");
+
+      trigger.textContent = button.textContent;
+      panel.classList.remove("open");
+    });
+  });
+
+  // 요일 다중 선택
+  document.querySelectorAll(".day-panel button").forEach((button) => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("selected");
+
+      const panel = button.closest(".day-panel");
+      const trigger = panel.parentElement.querySelector(".select-trigger");
+
+      const selected = [...panel.querySelectorAll(".selected")].map(
+        (btn) => btn.dataset.value,
+      );
+
+      trigger.textContent = selected.length ? selected.join(", ") : "요일 선택";
+    });
+  });
+
+  // 시간 다중 선택
+  document.querySelectorAll(".time-panel button").forEach((button) => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("selected");
+
+      const panel = button.closest(".time-panel");
+      const trigger = panel.parentElement.querySelector(".select-trigger");
+
+      const selected = [...panel.querySelectorAll(".selected")].map(
+        (btn) => btn.dataset.value,
+      );
+
+      trigger.textContent = selected.length ? selected.join(", ") : "시간 선택";
+    });
+  });
+
+  // 바깥 클릭 시 닫기
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".select-field")) {
+      panels.forEach((panel) => panel.classList.remove("open"));
+    }
+  });
+</script>

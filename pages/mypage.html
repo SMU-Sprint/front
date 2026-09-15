@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sprint | 마이페이지</title>
+    <link rel="stylesheet" href="../css/sidebar.css" />
+    <link rel="stylesheet" href="../css/mypage.css" />
+    <script src="../js/app.js" defer></script>
+  </head>
+  <body data-page="mypage">
+    <div id="sidebar-container"></div>
+    <main class="app-shell mypage">
+      <section class="profile-card">
+        <div class="avatar" aria-label="프로필 이미지"></div>
+        <div class="profile-grid">
+          <div class="info-row">
+            <span>나이</span>
+            <div class="value-with-unit">
+              <strong>00</strong>
+              <span>세</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span>성별</span>
+            <div class="value-with-unit">
+              <strong>성별</strong>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span>키</span>
+            <div class="value-with-unit">
+              <strong>000</strong>
+              <span>cm</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span>몸무게</span>
+            <div class="value-with-unit">
+              <strong>00</strong>
+              <span>kg</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preferences">
+        <div><span>운동지역</span><strong>00</strong></div>
+        <div>
+          <span>선호하는 운동 요일</span><strong>00, 00, 00, 00</strong>
+        </div>
+        <div>
+          <span>선호하는 운동 시간대</span><strong>00시,00시,00시</strong>
+        </div>
+      </section>
+      <div class="actions">
+        <a class="btn primary" href="mypage_correction1.html"
+          >회원정보 수정하기</a
+        >
+        <a class="btn survey" href="#">설문하러가기</a>
+        <div class="danger-row">
+          <button class="btn danger" data-modal-open="logout-modal">
+            로그아웃
+          </button>
+          <button class="btn danger" data-modal-open="withdraw-modal">
+            탈퇴
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <dialog class="confirm-modal" id="logout-modal">
+      <div class="modal-box">
+        <p>정말 로그아웃하시겠습니까?</p>
+        <div>
+          <button class="outline" onclick="location.href = 'main.html'">
+            예</button
+          ><button class="filled" data-modal-close>아니요</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog class="confirm-modal" id="withdraw-modal">
+      <div class="modal-box">
+        <p>정말 탈퇴하시겠습니까?</p>
+        <div>
+          <button class="outline">예</button
+          ><button class="filled" data-modal-close>아니요</button>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>

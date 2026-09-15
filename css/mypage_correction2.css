@@ -1,0 +1,173 @@
+.correction-form {
+  margin-left: 160px;
+  width: calc(100% - 160px);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+.correction-form label {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  align-items: center;
+  min-height: 65.33px;
+  border-bottom: 2px solid var(--main4);
+}
+.correction-form label:last-of-type {
+  border-bottom: 0;
+}
+.correction-form span {
+  padding-left: 20px;
+  color: var(--main4);
+  font-size: 20px;
+}
+.correction-form input {
+  width: 100%;
+  padding: 0 20px;
+  border: 0;
+  outline: 0;
+  text-align: right;
+  font-size: 19px;
+  background: transparent;
+}
+
+.select-field {
+  position: relative;
+}
+.select-trigger {
+  width: 100%;
+  padding: 0 20px;
+  border: 0;
+  background: transparent;
+  text-align: right;
+  font-size: 19px;
+  color: #000;
+  cursor: pointer;
+}
+.select-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: none;
+  width: 320px;
+  padding: 14px;
+  background: var(--base);
+  border: 2px solid var(--main4);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.select-panel.open {
+  display: block;
+}
+
+.region-panel {
+  max-height: 220px;
+  overflow-y: auto;
+}
+.region-panel button {
+  width: 100%;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 17px;
+  cursor: pointer;
+}
+.region-panel button:hover {
+  background: rgba(23, 112, 110, 0.1);
+}
+
+.day-panel {
+  display: none;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  width: 420px;
+}
+.day-panel.open {
+  display: grid;
+}
+.day-panel button {
+  height: 42px;
+  border: 1px solid var(--main4);
+  border-radius: 50%;
+  background: var(--base);
+  color: var(--main4);
+  cursor: pointer;
+}
+.day-panel button.selected {
+  background: var(--main4);
+  color: var(--base);
+}
+
+.time-panel {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 360px;
+}
+.time-panel.open {
+  display: grid;
+}
+.time-panel button {
+  height: 42px;
+  border: 1px solid var(--main4);
+  border-radius: 10px;
+  background: var(--base);
+  color: var(--main4);
+  cursor: pointer;
+}
+.time-panel button.selected {
+  background: var(--main4);
+  color: var(--base);
+}
+
+.value-with-unit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+.value-with-unit input {
+  width: auto;
+  min-width: 0;
+  padding-right: 2px;
+}
+.value-with-unit span {
+  padding-left: 0;
+  color: #000;
+  font-size: 19px;
+}
+
+.correction-form .submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 860px;
+  height: 40px;
+  margin-top: 130px;
+  color: var(--base);
+  background: var(--main4);
+  font-size: 30px;
+  border-radius: 90px;
+}
+@media (max-width: 760px) {
+  .correction-form {
+    padding: 30px 18px 110px;
+  }
+  .correction-form label {
+    grid-template-columns: 1fr 1fr;
+  }
+  .correction-form span {
+    padding-left: 4px;
+    font-size: 16px;
+  }
+  .correction-form input {
+    padding-right: 4px;
+    font-size: 16px;
+  }
+  .correction-form button {
+    margin-top: 70px;
+  }
+}
