@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sprint 사용자 등록하기</title>
+    <link rel="stylesheet" href="../css/signup3.css" />
+  </head>
+
+  <body>
+    <main class="login-container">
+      <!-- 상단 타이틀 -->
+      <h1 class="title">사용자 등록하기</h1>
+
+      <!-- 입력 영역 -->
+      <div class="login-form">
+        <!-- 성별 선택 탭 -->
+        <div class="gender-container">
+          <button type="button" id="maleBtn" class="gender-btn active">
+            남성
+          </button>
+          <button type="button" id="femaleBtn" class="gender-btn">여성</button>
+        </div>
+
+        <!-- 나이 -->
+        <input
+          type="number"
+          id="ageInput"
+          class="login-input"
+          placeholder="나이"
+        />
+
+        <!-- 키 -->
+        <div class="input-suffix-wrap">
+          <input
+            type="number"
+            id="heightInput"
+            class="login-input"
+            placeholder="키"
+          />
+          <span class="suffix">cm</span>
+        </div>
+
+        <!-- 몸무게 -->
+        <div class="input-suffix-wrap">
+          <input
+            type="number"
+            id="weightInput"
+            class="login-input"
+            placeholder="몸무게"
+          />
+          <span class="suffix">kg</span>
+        </div>
+
+        <!-- 운동 지역 선택 -->
+        <input
+          type="text"
+          id="regionInput"
+          class="login-input"
+          placeholder="운동 지역 선택"
+        />
+
+        <!-- 선호하는 운동 요일 -->
+        <input
+          type="text"
+          id="dayInput"
+          class="login-input"
+          placeholder="선호하는 운동 요일"
+        />
+
+        <!-- 선호하는 운동 시간대 -->
+        <input
+          type="text"
+          id="timeInput"
+          class="login-input"
+          placeholder="선호하는 운동 시간대"
+        />
+
+        <!-- 회원가입하기 버튼 -->
+        <a href="survey1.html" id="signupButton" class="signup-btn">
+          <img
+            id="signupImage"
+            src="../images/signup_off.png"
+            alt="회원가입하기"
+          />
+        </a>
+      </div>
+    </main>
+
+    <!-- 인터랙션 및 버튼 활성화 스크립트 -->
+    <script>
+      const maleBtn = document.getElementById("maleBtn");
+      const femaleBtn = document.getElementById("femaleBtn");
+
+      const ageInput = document.getElementById("ageInput");
+      const heightInput = document.getElementById("heightInput");
+      const weightInput = document.getElementById("weightInput");
+      const regionInput = document.getElementById("regionInput");
+      const dayInput = document.getElementById("dayInput");
+      const timeInput = document.getElementById("timeInput");
+
+      const signupButton = document.getElementById("signupButton");
+      const signupImage = document.getElementById("signupImage");
+
+      const inputs = [
+        ageInput,
+        heightInput,
+        weightInput,
+        regionInput,
+        dayInput,
+        timeInput,
+      ];
+
+      // 1. 성별 버튼 토글 기능 (기본 남성)
+      maleBtn.addEventListener("click", function () {
+        maleBtn.classList.add("active");
+        femaleBtn.classList.remove("active");
+      });
+
+      femaleBtn.addEventListener("click", function () {
+        femaleBtn.classList.add("active");
+        maleBtn.classList.remove("active");
+      });
+
+      // 2. 입력창 활성화 및 전체 입력 검증
+      function updateFormState() {
+        let allFilled = true;
+
+        inputs.forEach((input) => {
+          if (input.value.trim() !== "") {
+            input.classList.add("active");
+          } else {
+            input.classList.remove("active");
+            allFilled = false;
+          }
+        });
+
+        // 6칸 모두 입력되었을 때 회원가입 버튼을 on 이미지로 변경
+        if (allFilled) {
+          signupImage.src = "../images/signup_on.png";
+        } else {
+          signupImage.src = "../images/signup_off.png";
+        }
+      }
+
+      inputs.forEach((input) => {
+        input.addEventListener("input", updateFormState);
+      });
+
+      // 다 입력되지 않았을 때 회원가입 버튼 클릭 차단
+      signupButton.addEventListener("click", function (e) {
+        let allFilled = inputs.every((input) => input.value.trim() !== "");
+        if (!allFilled) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>

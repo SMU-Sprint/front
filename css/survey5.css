@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #f8fff9;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.survey-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 30px;
+}
+
+.survey-banner {
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 40px;
+}
+
+/* 기존 설문 박스들과 동일한 크기 및 최소 높이 유지 */
+.survey-box {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 580px;
+  border: 2px solid #17706e;
+  border-radius: 16px;
+  background-color: #ffffff;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.question-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.question-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+}
+
+/* 추천 운동 설명 텍스트 스타일 */
+.recommend-desc {
+  font-size: 17px;
+  color: #555555;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 1.5px;
+  background-color: #e0e0e0;
+}
+
+.button-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* 완료 버튼 (초록색 고정 스타일) */
+.next-btn {
+  width: 130px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.next-btn.on {
+  background-color: #17706e;
+  color: #ffffff;
+  cursor: pointer;
+}
