@@ -42,17 +42,17 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-.profile-grid div {
+.profile-grid > div {
   display: flex;
   justify-content: space-between;
   padding: 37.5px 20px;
   max-height: 99px;
   border-bottom: 2px solid var(--main4);
 }
-.profile-grid div:nth-child(odd) {
+.profile-grid > div:nth-child(odd) {
   border-right: 2px solid var(--main4);
 }
-.profile-grid div:nth-child(n + 3) {
+.profile-grid > div:nth-child(n + 3) {
   border-bottom: 0;
 }
 .profile-grid span,
