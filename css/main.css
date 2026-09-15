@@ -13,7 +13,7 @@
   display: grid;
   gap: 22px; }
 .mini-card, .calendar-card, .session-card { 
-  background: var(--base); 
+  background: var(--white); 
   border-radius: 22px; }
 .mini-card { 
   min-height: 285px; padding: 

@@ -16,8 +16,20 @@
   max-height: 250px;
   margin-bottom: 25px;
   padding: 23px;
+  background-color: var(--white);
   border: 2px solid var(--main4);
   border-radius: 20px;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.value-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 .avatar {
   width: 200px;
@@ -54,10 +66,12 @@
   font-weight: 500;
 }
 
-.preferences,
-.actions {
+.preferences {
   width: 900px;
   max-height: 200px;
+  background-color: var(--white);
+  border: 2px solid var(--main4);
+  border-radius: 20px;
 }
 .preferences div {
   display: flex;
@@ -66,7 +80,13 @@
   padding: 20px;
   border-bottom: 2px solid var(--main4);
 }
+.preferences div:last-child {
+  border-bottom: none;
+}
+
 .actions {
+  width: 900px;
+  max-height: 200px;
   margin-top: 10px;
   display: grid;
   gap: 20px;
