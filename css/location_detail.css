@@ -39,10 +39,10 @@ html {
   padding-left: 0;
 }
 
-/* 지도 영역 컨테이너 (크기를 큼직하게 확대) */
+/* 지도 영역 컨테이너 (.session-card 높이 635px와 동일하게 맞춤) */
 .map-container {
   width: 800px;
-  height: 720px;
+  height: 635px;
   background-color: #e0e0e0;
   border-radius: 16px;
   overflow: hidden;
@@ -50,10 +50,10 @@ html {
   flex-shrink: 0;
 }
 
-/* 우측 상세 정보 패널 (4등분 그리드) */
+/* 우측 상세 정보 패널 (.session-card 높이 635px와 동일하게 맞춤) */
 .info-panel {
-  width: 310px;
-  height: 720px;
+  width: 285px;
+  height: 635px;
   border: 2px solid var(--highlight, #fb7813);
   border-radius: 22px;
   background-color: var(--white, #ffffff);
@@ -91,7 +91,7 @@ html {
 .day-sub {
   font-size: 25px;
   font-weight: 400;
-  color: #555555;
+  color: #222222;
 }
 
 /* 운동 종목 글자 */
