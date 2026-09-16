@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="../css/sidebar.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <script src="../js/app.js" defer></script>
+      <link rel="stylesheet" href="../css/workout.css" />
+    <script src="../js/workout-config.js" defer></script>
+    <script src="../js/workout-service.js" defer></script>
+    <script src="../js/workout-ui.js" defer></script>
   </head>
   <body data-page="main">
     <div id="sidebar-container"></div>
@@ -25,14 +29,14 @@
       <section class="calendar-card">
         <header class="calendar-head">
           <h1></h1>
-          <div class="legend">
+          <div class="legend" aria-label="운동 시간별 색상" title="안함 / 30분 이내 / 30분 초과~1시간반 / 1시간반 초과~2시간 미만 / 2시간 이상">
             <span>Less</span>
             <i></i>
             <i></i>
             <i></i>
             <i></i>
             <i></i>
-            <i></i><span>More</span>
+            <span>More</span>
           </div>
         </header>
         <div class="week">
@@ -45,15 +49,25 @@
           <span>Sat</span>
         </div>
         <div class="month-grid" aria-label="금월 운동 잔디"></div>
+        <section class="daily-records" aria-label="선택한 날짜의 운동 기록">
+          <div class="record-heading"><h2 id="record-date"></h2><button type="button" id="refresh-records">새로고침</button></div>
+          <p id="record-total"></p>
+          <ul id="record-list" aria-live="polite"></ul>
+        </section>
       </section>
 
       <aside class="session-card">
-        <div class="date"><strong>2026/09/12</strong><span>토요일</span></div>
-        <div class="exercise">테니스</div>
-        <div class="time"><span>시작</span><strong>19:05:17</strong></div>
-        <div class="elapsed"><span>경과시간</span><strong>1:16:09</strong></div>
+        <div class="date"><strong data-current-date></strong><span data-current-weekday></span></div>
+        <div class="exercise"><strong id="session-sport">운동 대기</strong><small id="session-location"></small><small id="session-status"></small></div>
+        <div class="time"><span>시작</span><small id="session-start-date"></small><strong id="session-start">--:--:--</strong></div>
+        <div class="elapsed"><span>경과시간</span><strong id="session-elapsed" role="timer">00:00:00</strong><button type="button" id="endBtn" class="workout-end" disabled>종료하기</button></div>
       </aside>
+      <div class="dashboard-notices">
+        <p class="demo-note" data-demo-note hidden>체험 모드 · 기록은 이 브라우저에만 저장됩니다.</p>
+        <p id="workout-message" class="workout-message" role="status"></p>
+      </div>
     </main>
     <script src="../js/calendar.js" defer></script>
+    <script src="../js/main-workout.js" defer></script>
   </body>
 </html>
