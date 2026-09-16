@@ -137,3 +137,102 @@ body {
   display: block;
   object-fit: contain;
 }
+
+.select-field {
+  position: relative;
+}
+.select-trigger {
+  width: 100%;
+  padding: 0 20px;
+  border: 0;
+  background: transparent;
+  text-align: right;
+  font-size: 19px;
+  color: #000;
+  cursor: pointer;
+}
+.select-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: none;
+  width: 320px;
+  padding: 14px;
+  background: #f8fff9;
+  border: 2px solid #17706e;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.select-panel.open {
+  display: block;
+}
+
+.region-panel {
+  max-height: 220px;
+  overflow-y: auto;
+}
+.region-panel button {
+  width: 100%;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 17px;
+  cursor: pointer;
+}
+.region-panel button:hover {
+  background: rgba(23, 112, 110, 0.1);
+}
+
+.day-panel {
+  display: none;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  width: 420px;
+}
+.day-panel.open {
+  display: grid;
+}
+.day-panel button {
+  height: 42px;
+  border: 1px solid #17706e;
+  border-radius: 50%;
+  background: #f8fff9;
+  color: #17706e;
+  cursor: pointer;
+}
+.day-panel button.selected {
+  background: #17706e;
+  color: #f8fff9;
+}
+
+.time-panel {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 360px;
+}
+.time-panel.open {
+  display: grid;
+}
+.time-panel button {
+  height: 42px;
+  border: 1px solid #17706e;
+  border-radius: 10px;
+  background: #f8fff9;
+  color: #17706e;
+  cursor: pointer;
+}
+.time-panel button.selected {
+  background: #17706e;
+  color: #f8fff9;
+}
+
+
+.select-field { width: 563px; margin-bottom: 35px; }
+.select-field .select-trigger { height: 40px; border: 2px solid #d9d9d9; border-radius: 22px; padding: 0 18px; font-size: 17px; text-align: left; color: #d9d9d9; margin-bottom: 0; }
+.select-field .select-trigger.active { border-color: #17706e; color: #333; }
+.select-panel { max-width: 100%; }
+.select-trigger:focus-visible, .select-panel button:focus-visible { outline: 2px solid #17706e; outline-offset: 3px; }
+.input-suffix-wrap .login-input { padding-right: 65px; }
