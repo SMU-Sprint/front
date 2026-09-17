@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>운동동기 설문</title>
+    <link rel="stylesheet" href="../css/survey1.css" />
+  </head>
+
+  <body>
+    <main class="survey-container">
+      <!-- 상단 단계별 네비게이션 바 (이미지 대체) -->
+      <nav class="step-nav">
+        <a href="survey1.html" class="step-item active">운동동기</a>
+        <a href="survey2.html" class="step-item">국제신체활동1</a>
+        <a href="survey3.html" class="step-item">국제신체활동2</a>
+        <a href="survey4.html" class="step-item">노쇠설문</a>
+        <a href="survey5.html" class="step-item">추천 운동</a>
+      </nav>
+
+      <!-- 설문 폼 박스 -->
+      <form id="surveyForm" action="survey2.html" class="survey-box">
+        <!-- 1번 문항: 운동 목적 (다중 선택) -->
+        <div class="question-group">
+          <p class="question-title">운동 목적이 무엇입니까?</p>
+          <div class="options-row">
+            <label class="checkbox-label">
+              <input type="checkbox" name="purpose" value="다이어트" />
+              <span class="custom-box"></span> 다이어트
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="purpose" value="질환예방" />
+              <span class="custom-box"></span> 질환예방
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="purpose" value="체력측정" />
+              <span class="custom-box"></span> 체력측정(채용)
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="purpose" value="기타" />
+              <span class="custom-box"></span> 기타
+            </label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 2번 문항: 과거 운동 경험 (단일 선택 - 라디오) -->
+        <div class="question-group">
+          <p class="question-title">과거에 운동에 참여한 경험이 있습니까?</p>
+          <div class="options-row">
+            <label class="checkbox-label">
+              <input type="radio" name="experience" value="있다" />
+              <span class="custom-box radio-box"></span> 있다
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="experience" value="없다" />
+              <span class="custom-box radio-box"></span> 없다
+            </label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 3번 문항: 운동 제약사항 (다중 선택) -->
+        <div class="question-group">
+          <p class="question-title">운동에 제약사항이 있습니까?</p>
+          <div class="options-grid">
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="심장질환" />
+              <span class="custom-box"></span> 심장질환
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="어지럼증" />
+              <span class="custom-box"></span> 어지럼증
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="허리통증" />
+              <span class="custom-box"></span> 허리통증
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="무릎 및 발목통증" />
+              <span class="custom-box"></span> 무릎 및 발목통증
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="어깨 및 손목통증" />
+              <span class="custom-box"></span> 어깨 및 손목통증
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="고혈압" />
+              <span class="custom-box"></span> 고혈압
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="기타" />
+              <span class="custom-box"></span> 기타
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <!-- 하단 다음 버튼 -->
+      <div class="button-wrapper">
+        <button type="button" id="nextBtn" class="next-btn off" disabled>
+          다음
+        </button>
+      </div>
+    </main>
+
+    <!-- 유효성 검사 및 버튼 활성화 스크립트 -->
+    <script>
+      const surveyForm = document.getElementById("surveyForm");
+      const nextBtn = document.getElementById("nextBtn");
+
+      function checkFormValidation() {
+        const purposeChecked =
+          document.querySelectorAll('input[name="purpose"]:checked').length > 0;
+        const experienceChecked =
+          document.querySelectorAll('input[name="experience"]:checked').length >
+          0;
+        const limitChecked =
+          document.querySelectorAll('input[name="limit"]:checked').length > 0;
+
+        if (purposeChecked && experienceChecked && limitChecked) {
+          nextBtn.classList.remove("off");
+          nextBtn.classList.add("on");
+          nextBtn.removeAttribute("disabled");
+        } else {
+          nextBtn.classList.remove("on");
+          nextBtn.classList.add("off");
+          nextBtn.setAttribute("disabled", "true");
+        }
+      }
+
+      const allInputs = document.querySelectorAll(
+        'input[type="checkbox"], input[type="radio"]',
+      );
+      allInputs.forEach((input) => {
+        input.addEventListener("change", checkFormValidation);
+      });
+
+      nextBtn.addEventListener("click", function () {
+        if (!nextBtn.hasAttribute("disabled")) {
+          window.location.href = "survey2.html";
+        }
+      });
+    </script>
+  </body>
+</html>
