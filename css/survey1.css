@@ -22,13 +22,76 @@ body {
   padding: 40px 30px;
 }
 
-.survey-banner {
+/* =========================================
+   상단 화살표 탭 네비게이션 스타일 (추가됨)
+   ========================================= */
+.step-nav {
+  display: flex;
   width: 100%;
   max-width: 1100px;
-  height: auto;
-  object-fit: contain;
-  margin-bottom: 40px;
+  height: 100px;
+  margin-bottom: 30px;
+  gap: 6px;
 }
+
+.step-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #b6eb7a; /* 미선택 연한 초록 톤 */
+  color: #17706e;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 20px) 0%,
+    100% 50%,
+    calc(100% - 20px) 100%,
+    0% 100%,
+    20px 50%
+  );
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* 첫 번째 아이템은 왼쪽 화살표 모양 제거 (직선 처리) */
+.step-item:first-child {
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 20px) 0%,
+    100% 50%,
+    calc(100% - 20px) 100%,
+    0% 100%
+  );
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding-left: 10px;
+}
+
+/* 마지막 아이템은 오른쪽 화살표 모양 제거 (직선 처리) */
+.step-item:last-child {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%);
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding-right: 10px;
+}
+
+/* 마우스 호버 효과 */
+.step-item:hover {
+  background-color: #9cd497;
+}
+
+/* 현재 활성화된 단계 (진한 청록색) */
+.step-item.active {
+  background-color: #17706e;
+  color: #ffffff;
+}
+
+/* ========================================= */
 
 /* 설문 박스 크기 및 최소 높이 고정 */
 .survey-box {
