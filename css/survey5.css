@@ -22,6 +22,72 @@ body {
   padding: 40px 30px;
 }
 
+/* =========================================
+   상단 화살표 탭 네비게이션 스타일
+   ========================================= */
+.step-nav {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  height: 100px;
+  margin-bottom: 30px;
+  gap: 6px;
+}
+
+.step-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #b6eb7a;
+  color: #17706e;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 20px) 0%,
+    100% 50%,
+    calc(100% - 20px) 100%,
+    0% 100%,
+    20px 50%
+  );
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.step-item:first-child {
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 20px) 0%,
+    100% 50%,
+    calc(100% - 20px) 100%,
+    0% 100%
+  );
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding-left: 10px;
+}
+
+.step-item:last-child {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%);
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding-right: 10px;
+}
+
+.step-item:hover {
+  background-color: #9cd497;
+}
+
+.step-item.active {
+  background-color: #17706e;
+  color: #ffffff;
+}
+/* ========================================= */
+
 .survey-banner {
   width: 100%;
   max-width: 1100px;
