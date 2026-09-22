@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>국제신체활동1 설문</title>
     <link rel="stylesheet" href="../css/survey2.css" />
-    <script src="../js/survey-storage.js"></script>
   </head>
 
   <body>
@@ -149,58 +148,6 @@
       </div>
     </main>
 
-    <!-- 유효성 검사 및 버튼 활성화 스크립트 -->
-    <script>
-      const locationInput = document.getElementById("locationInput");
-      const nextBtn = document.getElementById("nextBtn");
-
-      function checkFormValidation() {
-        const jobChecked =
-          document.querySelectorAll('input[name="job"]:checked').length > 0;
-        const locationVal = locationInput.value.trim() !== "";
-        const sportsChecked =
-          document.querySelectorAll('input[name="sports"]:checked').length > 0;
-
-        // 1번 라디오, 2번 인풋, 3번 체크박스(최소 1개) 모두 충족될 때 활성화
-        if (jobChecked && locationVal && sportsChecked) {
-          nextBtn.classList.remove("off");
-          nextBtn.classList.add("on");
-          nextBtn.removeAttribute("disabled");
-        } else {
-          nextBtn.classList.remove("on");
-          nextBtn.classList.add("off");
-          nextBtn.setAttribute("disabled", "true");
-        }
-      }
-
-      locationInput.addEventListener("input", function () {
-        if (this.value.trim() !== "") {
-          this.classList.add("active");
-        } else {
-          this.classList.remove("active");
-        }
-        checkFormValidation();
-      });
-
-      const allInputs = document.querySelectorAll(
-        'input[type="checkbox"], input[type="radio"]',
-      );
-      allInputs.forEach((input) => {
-        input.addEventListener("change", checkFormValidation);
-      });
-
-      restoreSurveyStep("survey2");
-      if (locationInput.value.trim() !== "") {
-        locationInput.classList.add("active");
-      }
-      checkFormValidation();
-
-      nextBtn.addEventListener("click", function () {
-        if (!nextBtn.hasAttribute("disabled")) {
-          saveSurveyStep("survey2");
-          window.location.href = "survey3.html";
-        }
-      });
-    </script>
+    <script src="../js/survey2.js"></script>
   </body>
 </html>

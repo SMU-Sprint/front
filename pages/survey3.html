@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>국제신체활동2 설문</title>
     <link rel="stylesheet" href="../css/survey3.css" />
-    <script src="../js/survey-storage.js"></script>
   </head>
 
   <body>
@@ -129,46 +128,6 @@
       </div>
     </main>
 
-    <!-- 유효성 검사 및 버튼 활성화 스크립트 -->
-    <script>
-      const nextBtn = document.getElementById("nextBtn");
-
-      function checkFormValidation() {
-        const vigorousChecked =
-          document.querySelectorAll('input[name="vigorous"]:checked').length >
-          0;
-        const moderateChecked =
-          document.querySelectorAll('input[name="moderate"]:checked').length >
-          0;
-        const walkingChecked =
-          document.querySelectorAll('input[name="walking"]:checked').length > 0;
-
-        // 세 문항 모두 선택되었을 때 다음 버튼 활성화
-        if (vigorousChecked && moderateChecked && walkingChecked) {
-          nextBtn.classList.remove("off");
-          nextBtn.classList.add("on");
-          nextBtn.removeAttribute("disabled");
-        } else {
-          nextBtn.classList.remove("on");
-          nextBtn.classList.add("off");
-          nextBtn.setAttribute("disabled", "true");
-        }
-      }
-
-      const allInputs = document.querySelectorAll('input[type="radio"]');
-      allInputs.forEach((input) => {
-        input.addEventListener("change", checkFormValidation);
-      });
-
-      restoreSurveyStep("survey3");
-      checkFormValidation();
-
-      nextBtn.addEventListener("click", function () {
-        if (!nextBtn.hasAttribute("disabled")) {
-          saveSurveyStep("survey3");
-          window.location.href = "survey4.html";
-        }
-      });
-    </script>
+    <script src="../js/survey3.js"></script>
   </body>
 </html>

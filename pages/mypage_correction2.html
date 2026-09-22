@@ -110,7 +110,74 @@
         </button>
       </form>
     </main>
-  <script src="../js/profile-select.js" defer></script>
   </body>
 </html>
+<script>
+  const triggers = document.querySelectorAll(".select-trigger");
+  const panels = document.querySelectorAll(".select-panel");
 
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const targetId = trigger.dataset.target;
+      const targetPanel = document.getElementById(targetId);
+
+      panels.forEach((panel) => {
+        if (panel !== targetPanel) {
+          panel.classList.remove("open");
+        }
+      });
+
+      targetPanel.classList.toggle("open");
+    });
+  });
+
+  // 운동지역
+  document.querySelectorAll(".region-panel button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const panel = button.closest(".region-panel");
+      const trigger = panel.parentElement.querySelector(".select-trigger");
+
+      trigger.textContent = button.textContent;
+      panel.classList.remove("open");
+    });
+  });
+
+  // 요일 다중 선택
+  document.querySelectorAll(".day-panel button").forEach((button) => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("selected");
+
+      const panel = button.closest(".day-panel");
+      const trigger = panel.parentElement.querySelector(".select-trigger");
+
+      const selected = [...panel.querySelectorAll(".selected")].map(
+        (btn) => btn.dataset.value,
+      );
+
+      trigger.textContent = selected.length ? selected.join(", ") : "요일 선택";
+    });
+  });
+
+  // 시간 다중 선택
+  document.querySelectorAll(".time-panel button").forEach((button) => {
+    button.addEventListener("click", () => {
+      button.classList.toggle("selected");
+
+      const panel = button.closest(".time-panel");
+      const trigger = panel.parentElement.querySelector(".select-trigger");
+
+      const selected = [...panel.querySelectorAll(".selected")].map(
+        (btn) => btn.dataset.value,
+      );
+
+      trigger.textContent = selected.length ? selected.join(", ") : "시간 선택";
+    });
+  });
+
+  // 바깥 클릭 시 닫기
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".select-field")) {
+      panels.forEach((panel) => panel.classList.remove("open"));
+    }
+  });
+</script>

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>노쇠설문</title>
     <link rel="stylesheet" href="../css/survey4.css" />
-    <script src="../js/survey-storage.js"></script>
   </head>
 
   <body>
@@ -107,66 +106,11 @@
 
       <div class="button-wrapper">
         <button type="button" id="nextBtn" class="next-btn off" disabled>
-          제출하기
+          다음
         </button>
       </div>
     </main>
 
-    <!-- 유효성 검사 및 버튼 활성화 스크립트 -->
-    <script>
-      const nextBtn = document.getElementById("nextBtn");
-
-      function checkFormValidation() {
-        const fatigueChecked =
-          document.querySelectorAll('input[name="fatigue"]:checked').length > 0;
-        const stairsChecked =
-          document.querySelectorAll('input[name="stairs"]:checked').length > 0;
-        const walkingChecked =
-          document.querySelectorAll('input[name="walking"]:checked').length > 0;
-        const weightChecked =
-          document.querySelectorAll('input[name="weight"]:checked').length > 0;
-
-        // 4문항 모두 선택되었을 때 다음 버튼 활성화
-        if (
-          fatigueChecked &&
-          stairsChecked &&
-          walkingChecked &&
-          weightChecked
-        ) {
-          nextBtn.classList.remove("off");
-          nextBtn.classList.add("on");
-          nextBtn.removeAttribute("disabled");
-        } else {
-          nextBtn.classList.remove("on");
-          nextBtn.classList.add("off");
-          nextBtn.setAttribute("disabled", "true");
-        }
-      }
-
-      const allInputs = document.querySelectorAll('input[type="radio"]');
-      allInputs.forEach((input) => {
-        input.addEventListener("change", checkFormValidation);
-      });
-
-      restoreSurveyStep("survey4");
-      checkFormValidation();
-
-      nextBtn.addEventListener("click", async function () {
-        if (nextBtn.hasAttribute("disabled")) return;
-
-        nextBtn.setAttribute("disabled", "true");
-        nextBtn.textContent = "제출 중";
-
-        try {
-          await submitSurveyDraft("survey4");
-          window.location.href = "survey5.html";
-        } catch (error) {
-          console.error(error);
-          alert("설문 제출에 실패했습니다. 잠시 후 다시 시도해 주세요.");
-          nextBtn.textContent = "제출하기";
-          checkFormValidation();
-        }
-      });
-    </script>
+    <script src="../js/survey4.js"></script>
   </body>
 </html>

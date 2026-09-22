@@ -7,56 +7,85 @@
     <link rel="stylesheet" href="../css/location_detail.css" />
     <link rel="stylesheet" href="../css/sidebar.css" />
     <script src="../js/app.js" defer></script>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="../css/workout.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-    <script src="../js/workout-config.js" defer></script>
-    <script src="../js/workout-service.js" defer></script>
-    <script src="../js/workout-ui.js" defer></script>
-    <script src="../js/location-map.js" defer></script>
-    <script src="../js/location-workout.js" defer></script>
   </head>
 
-  <body data-page="place" data-workout-page="detail">
+  <body data-page="place">
     <div class="page-wrapper">
       <div id="sidebar-container"></div>
 
       <!-- 오른쪽 메인 장소/지도 영역 -->
       <section
         class="main-section"
->
+        style="background-image: url(&quot;../images/location.png&quot;)"
+      >
         <!-- 지도 영역 -->
-        <div class="map-and-locations">
-          <div id="workout-map" class="map-container" aria-label="운동 장소 지도"></div>
-          <div id="location-list" class="location-list" aria-label="운동 장소 목록"></div>
-          <p class="demo-note" data-demo-note hidden>체험 모드 · 장소·종목은 예시이며, 기록은 이 브라우저에만 저장됩니다.</p>
-          <p id="workout-message" class="workout-message" role="status"></p>
+        <div class="map-container">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d101235.39433917822!2d126.89136195729724!3d37.53488210359146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2012d5c39cf%3A0x7e11eca1405bf29b!2z7ISc7Jq47Yq567OE7Iuc!5e0!3m2!1sko!2skr!4v1700000000000!5m2!1sko!2skr"
+            width="100%"
+            height="100%"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+          >
+          </iframe>
         </div>
 
         <!-- 4개 구역으로 균등 분배된 우측 패널 -->
         <aside class="info-panel">
-          <div class="info-section">
-            <div class="date-main" data-current-date></div>
-            <div class="day-sub" data-current-weekday></div>
-          </div>
-          <div class="info-section sport-section">
-            <small id="location-name">장소를 선택하세요</small>
-            <div class="sport-picker">
-              <button type="button" id="sport-trigger" class="sport-name" aria-haspopup="listbox" aria-expanded="false" aria-controls="sport-options" disabled>운동 선택 ▾</button>
-              <div id="sport-options" class="sport-options" role="listbox" aria-label="가능한 운동" hidden></div>
-            </div>
-          </div>
-          <div class="info-section">
-            <button type="button" id="startBtn" class="action-btn start-btn" disabled>시작하기</button>
-          </div>
-          <div class="info-section">
-            <button type="button" id="endBtn" class="action-btn end-btn" disabled>종료하기</button>
-            <a href="main.html" class="view-session">메인에서 시간 확인</a>
-          </div>
-        </aside>
+  <div class="info-section">
+    <div class="date-main">2026/09/15</div>
+    <div class="day-sub">화요일</div>
+  </div>
+  <div class="info-section">
+    <div class="sport-name">테니스</div>
+  </div>
+  <div class="info-section">
+    <button class="action-btn start-btn">시작하기</button>
+  </div>
+  <div class="info-section">
+    <button class="action-btn end-btn">종료하기</button>
+  </div>
+</aside>
+        </div>
       </section>
     </div>
 
+    <!-- 데이터 연동 스크립트 -->
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
 
+        const days = [
+          "일요일",
+          "월요일",
+          "화요일",
+          "수요일",
+          "목요일",
+          "금요일",
+          "토요일",
+        ];
+        const dayOfWeek = days[now.getDay()];
+
+        document.getElementById("dateText").textContent =
+          `${year}/${month}/${day}`;
+        document.getElementById("dayText").textContent = dayOfWeek;
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        updateDateTime();
+      });
+
+      document.getElementById("startBtn").addEventListener("click", () => {
+        alert("운동을 시작합니다!");
+      });
+
+      document.getElementById("endBtn").addEventListener("click", () => {
+        alert("운동을 종료합니다.");
+      });
+    </script>
   </body>
 </html>
