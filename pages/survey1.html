@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>운동동기 설문</title>
     <link rel="stylesheet" href="../css/survey1.css" />
+    <script src="../js/survey-storage.js"></script>
   </head>
 
   <body>
@@ -138,8 +139,12 @@
         input.addEventListener("change", checkFormValidation);
       });
 
+      restoreSurveyStep("survey1");
+      checkFormValidation();
+
       nextBtn.addEventListener("click", function () {
         if (!nextBtn.hasAttribute("disabled")) {
+          saveSurveyStep("survey1");
           window.location.href = "survey2.html";
         }
       });

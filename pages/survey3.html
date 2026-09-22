@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>국제신체활동2 설문</title>
     <link rel="stylesheet" href="../css/survey3.css" />
+    <script src="../js/survey-storage.js"></script>
   </head>
 
   <body>
@@ -141,8 +142,12 @@
         input.addEventListener("change", checkFormValidation);
       });
 
+      restoreSurveyStep("survey3");
+      checkFormValidation();
+
       nextBtn.addEventListener("click", function () {
         if (!nextBtn.hasAttribute("disabled")) {
+          saveSurveyStep("survey3");
           window.location.href = "survey4.html";
         }
       });

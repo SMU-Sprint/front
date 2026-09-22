@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>노쇠설문</title>
     <link rel="stylesheet" href="../css/survey4.css" />
+    <script src="../js/survey-storage.js"></script>
   </head>
 
   <body>
@@ -97,7 +98,7 @@
       <!-- 하단 다음 버튼 -->
       <div class="button-wrapper">
         <button type="button" id="nextBtn" class="next-btn off" disabled>
-          다음
+          제출하기
         </button>
       </div>
     </main>
@@ -138,9 +139,23 @@
         input.addEventListener("change", checkFormValidation);
       });
 
-      nextBtn.addEventListener("click", function () {
-        if (!nextBtn.hasAttribute("disabled")) {
+      restoreSurveyStep("survey4");
+      checkFormValidation();
+
+      nextBtn.addEventListener("click", async function () {
+        if (nextBtn.hasAttribute("disabled")) return;
+
+        nextBtn.setAttribute("disabled", "true");
+        nextBtn.textContent = "제출 중";
+
+        try {
+          await submitSurveyDraft("survey4");
           window.location.href = "survey5.html";
+        } catch (error) {
+          console.error(error);
+          alert("설문 제출에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+          nextBtn.textContent = "제출하기";
+          checkFormValidation();
         }
       });
     </script>
