@@ -122,61 +122,6 @@ function renderKakaoMarkersInBatches({ map, clusterer, infoWindow, places }) {
   renderBatch();
 }
 
-function initFallbackMap(container, places) {
-  if (!window.L?.markerClusterGroup) return false;
-
-  const { L } = window;
-  const map = L.map(container, { preferCanvas: true }).setView(
-    [DEFAULT_CENTER.lat, DEFAULT_CENTER.lng],
-    7,
-  );
-  const clusterer = L.markerClusterGroup({
-    chunkedLoading: true,
-    removeOutsideVisibleBounds: true,
-  });
-  const bounds = L.latLngBounds();
-  let index = 0;
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors",
-    maxZoom: 19,
-  }).addTo(map);
-  map.addLayer(clusterer);
-
-  function renderBatch() {
-    const batchEnd = Math.min(index + MARKER_BATCH_SIZE, places.length);
-    const markers = [];
-
-    for (; index < batchEnd; index += 1) {
-      const place = places[index];
-      const position = [Number(place.lat), Number(place.lng)];
-      const marker = L.marker(position).bindPopup(createInfoContent(place));
-
-      bounds.extend(position);
-      markers.push(marker);
-    }
-
-    clusterer.addLayers(markers);
-    setMapStatus(
-      `${index.toLocaleString("ko-KR")} / ${places.length.toLocaleString("ko-KR")}개 장소를 표시하는 중입니다.`,
-    );
-
-    if (index < places.length) {
-      scheduleNextBatch(renderBatch);
-      return;
-    }
-
-    map.fitBounds(bounds, { padding: [20, 20] });
-    setMapStatus(
-      `${places.length.toLocaleString("ko-KR")}개 장소가 등록되었습니다.`,
-    );
-  }
-
-  map.invalidateSize();
-  renderBatch();
-  return true;
-}
-
 async function initKakaoMap() {
   const container = document.getElementById("kakaoMap");
 
@@ -192,15 +137,11 @@ async function initKakaoMap() {
   try {
     await waitForKakaoMaps();
   } catch (error) {
-    console.info("Kakao Maps SDK unavailable; using the fallback map.", error);
-    setMapStatus("지도를 불러오는 중입니다.");
-
-    if (!initFallbackMap(container, places)) {
-      setMapStatus(
-        "지도를 불러오지 못했습니다. 네트워크 연결을 확인해 주세요.",
-        true,
-      );
-    }
+    console.error("Kakao Maps SDK unavailable.", error);
+    setMapStatus(
+      "카카오맵을 불러오지 못했습니다. Kakao Developers에서 현재 도메인을 등록해 주세요.",
+      true,
+    );
     return;
   }
 
