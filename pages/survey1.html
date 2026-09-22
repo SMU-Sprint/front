@@ -9,7 +9,6 @@
 
   <body>
     <main class="survey-container">
-      <!-- 상단 단계별 네비게이션 바 (이미지 대체) -->
       <nav class="step-nav">
         <a href="survey1.html" class="step-item active">운동동기</a>
         <a href="survey2.html" class="step-item">국제신체활동1</a>
@@ -18,9 +17,7 @@
         <a href="survey5.html" class="step-item">추천 운동</a>
       </nav>
 
-      <!-- 설문 폼 박스 -->
-      <form id="surveyForm" action="survey2.html" class="survey-box">
-        <!-- 1번 문항: 운동 목적 (다중 선택) -->
+      <form id="surveyForm" class="survey-box">
         <div class="question-group">
           <p class="question-title">운동 목적이 무엇입니까?</p>
           <div class="options-row">
@@ -45,7 +42,6 @@
 
         <div class="divider"></div>
 
-        <!-- 2번 문항: 과거 운동 경험 (단일 선택 - 라디오) -->
         <div class="question-group">
           <p class="question-title">과거에 운동에 참여한 경험이 있습니까?</p>
           <div class="options-row">
@@ -62,7 +58,6 @@
 
         <div class="divider"></div>
 
-        <!-- 3번 문항: 운동 제약사항 (다중 선택) -->
         <div class="question-group">
           <p class="question-title">운동에 제약사항이 있습니까?</p>
           <div class="options-grid">
@@ -98,7 +93,6 @@
         </div>
       </form>
 
-      <!-- 하단 다음 버튼 -->
       <div class="button-wrapper">
         <button type="button" id="nextBtn" class="next-btn off" disabled>
           다음
