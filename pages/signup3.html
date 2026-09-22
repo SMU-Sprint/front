@@ -25,7 +25,7 @@
         <!-- 나이 -->
         <input
           type="number"
-          id="ageInput"
+          id="ageInput" min="1" max="120" step="1" required
           class="login-input"
           placeholder="나이"
         />
@@ -34,7 +34,7 @@
         <div class="input-suffix-wrap">
           <input
             type="number"
-            id="heightInput"
+            id="heightInput" min="1" max="300" step="0.1" required
             class="login-input"
             placeholder="키"
           />
@@ -45,7 +45,7 @@
         <div class="input-suffix-wrap">
           <input
             type="number"
-            id="weightInput"
+            id="weightInput" min="1" max="500" step="0.1" required
             class="login-input"
             placeholder="몸무게"
           />
@@ -53,28 +53,60 @@
         </div>
 
         <!-- 운동 지역 선택 -->
-        <input
-          type="text"
-          id="regionInput"
-          class="login-input"
-          placeholder="운동 지역 선택"
-        />
+        <div class="select-field">
+          <button type="button" id="regionInput" class="login-input select-trigger" data-target="region-panel" data-placeholder="운동 지역 선택" aria-expanded="false" aria-controls="region-panel">운동 지역 선택</button>
+          <div class="select-panel region-panel" id="region-panel">
+            <button type="button">서울</button>
+            <button type="button">경기</button>
+            <button type="button">인천</button>
+            <button type="button">부산</button>
+            <button type="button">대구</button>
+            <button type="button">대전</button>
+            <button type="button">광주</button>
+            <button type="button">울산</button>
+            <button type="button">세종</button>
+          </div>
+        </div>
 
         <!-- 선호하는 운동 요일 -->
-        <input
-          type="text"
-          id="dayInput"
-          class="login-input"
-          placeholder="선호하는 운동 요일"
-        />
+        <div class="select-field">
+          <button type="button" id="dayInput" class="login-input select-trigger" data-target="day-panel" data-placeholder="선호하는 운동 요일" aria-expanded="false" aria-controls="day-panel">선호하는 운동 요일</button>
+          <div class="select-panel day-panel" id="day-panel">
+            <button type="button" data-value="월">월</button>
+            <button type="button" data-value="화">화</button>
+            <button type="button" data-value="수">수</button>
+            <button type="button" data-value="목">목</button>
+            <button type="button" data-value="금">금</button>
+            <button type="button" data-value="토">토</button>
+            <button type="button" data-value="일">일</button>
+          </div>
+        </div>
 
         <!-- 선호하는 운동 시간대 -->
-        <input
-          type="text"
-          id="timeInput"
-          class="login-input"
-          placeholder="선호하는 운동 시간대"
-        />
+        <div class="select-field">
+          <button type="button" id="timeInput" class="login-input select-trigger" data-target="time-panel" data-placeholder="선호하는 운동 시간대" aria-expanded="false" aria-controls="time-panel">선호하는 운동 시간대</button>
+          <div class="select-panel time-panel" id="time-panel">
+            <button type="button" data-value="06시">06시</button>
+            <button type="button" data-value="07시">07시</button>
+            <button type="button" data-value="08시">08시</button>
+            <button type="button" data-value="09시">09시</button>
+            <button type="button" data-value="10시">10시</button>
+            <button type="button" data-value="11시">11시</button>
+            <button type="button" data-value="12시">12시</button>
+            <button type="button" data-value="13시">13시</button>
+            <button type="button" data-value="14시">14시</button>
+            <button type="button" data-value="15시">15시</button>
+            <button type="button" data-value="16시">16시</button>
+            <button type="button" data-value="17시">17시</button>
+            <button type="button" data-value="18시">18시</button>
+            <button type="button" data-value="19시">19시</button>
+            <button type="button" data-value="20시">20시</button>
+            <button type="button" data-value="21시">21시</button>
+            <button type="button" data-value="22시">22시</button>
+            <button type="button" data-value="23시">23시</button>
+            <button type="button" data-value="24시">24시</button>
+          </div>
+        </div>
 
         <!-- 회원가입하기 버튼 -->
         <a href="survey1.html" id="signupButton" class="signup-btn">
@@ -88,72 +120,7 @@
     </main>
 
     <!-- 인터랙션 및 버튼 활성화 스크립트 -->
-    <script>
-      const maleBtn = document.getElementById("maleBtn");
-      const femaleBtn = document.getElementById("femaleBtn");
-
-      const ageInput = document.getElementById("ageInput");
-      const heightInput = document.getElementById("heightInput");
-      const weightInput = document.getElementById("weightInput");
-      const regionInput = document.getElementById("regionInput");
-      const dayInput = document.getElementById("dayInput");
-      const timeInput = document.getElementById("timeInput");
-
-      const signupButton = document.getElementById("signupButton");
-      const signupImage = document.getElementById("signupImage");
-
-      const inputs = [
-        ageInput,
-        heightInput,
-        weightInput,
-        regionInput,
-        dayInput,
-        timeInput,
-      ];
-
-      // 1. 성별 버튼 토글 기능 (기본 남성)
-      maleBtn.addEventListener("click", function () {
-        maleBtn.classList.add("active");
-        femaleBtn.classList.remove("active");
-      });
-
-      femaleBtn.addEventListener("click", function () {
-        femaleBtn.classList.add("active");
-        maleBtn.classList.remove("active");
-      });
-
-      // 2. 입력창 활성화 및 전체 입력 검증
-      function updateFormState() {
-        let allFilled = true;
-
-        inputs.forEach((input) => {
-          if (input.value.trim() !== "") {
-            input.classList.add("active");
-          } else {
-            input.classList.remove("active");
-            allFilled = false;
-          }
-        });
-
-        // 6칸 모두 입력되었을 때 회원가입 버튼을 on 이미지로 변경
-        if (allFilled) {
-          signupImage.src = "../images/signup_on.png";
-        } else {
-          signupImage.src = "../images/signup_off.png";
-        }
-      }
-
-      inputs.forEach((input) => {
-        input.addEventListener("input", updateFormState);
-      });
-
-      // 다 입력되지 않았을 때 회원가입 버튼 클릭 차단
-      signupButton.addEventListener("click", function (e) {
-        let allFilled = inputs.every((input) => input.value.trim() !== "");
-        if (!allFilled) {
-          e.preventDefault();
-        }
-      });
-    </script>
+    <script src="../js/profile-select.js" defer></script>
+    <script src="../js/signup-profile.js" defer></script>
   </body>
 </html>

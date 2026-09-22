@@ -15,7 +15,7 @@ function escapeHtml(value) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
-    .replaceAll("\"", "&quot;")
+    .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
 
@@ -40,12 +40,14 @@ function getValidPlaces() {
     const lat = Number(place.lat);
     const lng = Number(place.lng);
 
-    return Number.isFinite(lat)
-      && Number.isFinite(lng)
-      && lat >= -90
-      && lat <= 90
-      && lng >= -180
-      && lng <= 180;
+    return (
+      Number.isFinite(lat) &&
+      Number.isFinite(lng) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      lng >= -180 &&
+      lng <= 180
+    );
   });
 }
 
@@ -87,7 +89,10 @@ function renderKakaoMarkersInBatches({ map, clusterer, infoWindow, places }) {
 
     for (; index < batchEnd; index += 1) {
       const place = places[index];
-      const position = new kakao.maps.LatLng(Number(place.lat), Number(place.lng));
+      const position = new kakao.maps.LatLng(
+        Number(place.lat),
+        Number(place.lng),
+      );
       const marker = new kakao.maps.Marker({ position });
 
       bounds.extend(position);
@@ -109,7 +114,9 @@ function renderKakaoMarkersInBatches({ map, clusterer, infoWindow, places }) {
     }
 
     map.setBounds(bounds);
-    setMapStatus(`${places.length.toLocaleString("ko-KR")}개 장소가 등록되었습니다.`);
+    setMapStatus(
+      `${places.length.toLocaleString("ko-KR")}개 장소가 등록되었습니다.`,
+    );
   }
 
   renderBatch();
@@ -160,7 +167,9 @@ function initFallbackMap(container, places) {
     }
 
     map.fitBounds(bounds, { padding: [20, 20] });
-    setMapStatus(`${places.length.toLocaleString("ko-KR")}개 장소가 등록되었습니다.`);
+    setMapStatus(
+      `${places.length.toLocaleString("ko-KR")}개 장소가 등록되었습니다.`,
+    );
   }
 
   map.invalidateSize();
@@ -187,7 +196,10 @@ async function initKakaoMap() {
     setMapStatus("지도를 불러오는 중입니다.");
 
     if (!initFallbackMap(container, places)) {
-      setMapStatus("지도를 불러오지 못했습니다. 네트워크 연결을 확인해 주세요.", true);
+      setMapStatus(
+        "지도를 불러오지 못했습니다. 네트워크 연결을 확인해 주세요.",
+        true,
+      );
     }
     return;
   }
@@ -207,7 +219,9 @@ async function initKakaoMap() {
   const infoWindow = new kakao.maps.InfoWindow({ removable: true });
 
   map.relayout();
-  setMapStatus(`${places.length.toLocaleString("ko-KR")}개 장소를 준비하는 중입니다.`);
+  setMapStatus(
+    `${places.length.toLocaleString("ko-KR")}개 장소를 준비하는 중입니다.`,
+  );
   renderKakaoMarkersInBatches({
     map,
     clusterer,
