@@ -77,7 +77,7 @@
         />
 
         <!-- 회원가입하기 버튼 -->
-        <a href="survey1.html" id="signupButton" class="signup-btn">
+        <a href="#" id="signupButton" class="signup-btn">
           <img
             id="signupImage"
             src="../images/signup_off.png"
@@ -87,73 +87,7 @@
       </div>
     </main>
 
-    <!-- 인터랙션 및 버튼 활성화 스크립트 -->
-    <script>
-      const maleBtn = document.getElementById("maleBtn");
-      const femaleBtn = document.getElementById("femaleBtn");
-
-      const ageInput = document.getElementById("ageInput");
-      const heightInput = document.getElementById("heightInput");
-      const weightInput = document.getElementById("weightInput");
-      const regionInput = document.getElementById("regionInput");
-      const dayInput = document.getElementById("dayInput");
-      const timeInput = document.getElementById("timeInput");
-
-      const signupButton = document.getElementById("signupButton");
-      const signupImage = document.getElementById("signupImage");
-
-      const inputs = [
-        ageInput,
-        heightInput,
-        weightInput,
-        regionInput,
-        dayInput,
-        timeInput,
-      ];
-
-      // 1. 성별 버튼 토글 기능 (기본 남성)
-      maleBtn.addEventListener("click", function () {
-        maleBtn.classList.add("active");
-        femaleBtn.classList.remove("active");
-      });
-
-      femaleBtn.addEventListener("click", function () {
-        femaleBtn.classList.add("active");
-        maleBtn.classList.remove("active");
-      });
-
-      // 2. 입력창 활성화 및 전체 입력 검증
-      function updateFormState() {
-        let allFilled = true;
-
-        inputs.forEach((input) => {
-          if (input.value.trim() !== "") {
-            input.classList.add("active");
-          } else {
-            input.classList.remove("active");
-            allFilled = false;
-          }
-        });
-
-        // 6칸 모두 입력되었을 때 회원가입 버튼을 on 이미지로 변경
-        if (allFilled) {
-          signupImage.src = "../images/signup_on.png";
-        } else {
-          signupImage.src = "../images/signup_off.png";
-        }
-      }
-
-      inputs.forEach((input) => {
-        input.addEventListener("input", updateFormState);
-      });
-
-      // 다 입력되지 않았을 때 회원가입 버튼 클릭 차단
-      signupButton.addEventListener("click", function (e) {
-        let allFilled = inputs.every((input) => input.value.trim() !== "");
-        if (!allFilled) {
-          e.preventDefault();
-        }
-      });
-    </script>
+    <!-- 자바스크립트 파일 연결 -->
+    <script src="../js/signup3.js"></script>
   </body>
 </html>

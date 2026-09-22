@@ -9,7 +9,6 @@
 
   <body>
     <main class="survey-container">
-      <!-- 상단 단계별 네비게이션 바 (클릭 이동 가능) -->
       <nav class="step-nav">
         <a href="survey1.html" class="step-item">운동동기</a>
         <a href="survey2.html" class="step-item">국제신체활동1</a>
@@ -18,91 +17,110 @@
         <a href="survey5.html" class="step-item">추천 운동</a>
       </nav>
 
-      <!-- 설문 폼 박스 -->
-      <form id="surveyForm" action="survey4.html" class="survey-box">
-        <!-- 1번 문항: 격렬한 신체활동 (단일 선택) -->
+      <form id="surveyForm" class="survey-box">
         <div class="question-group">
           <p class="question-title">
             지난 일주일 동안, 무거운 물건 나르기, 달리기 등과 같은 격렬한
             신체활동을 며칠간 하셨습니까?
           </p>
           <div class="options-row">
-            <label class="checkbox-label">
-              <input type="radio" name="vigorous" value="주 1-2일" />
-              <span class="custom-box radio-box"></span> 주 1-2일
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="vigorous" value="주 3-4일" />
-              <span class="custom-box radio-box"></span> 주 3-4일
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="vigorous" value="주 5일 이상" />
-              <span class="custom-box radio-box"></span> 주 5일 이상
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="vigorous" value="안한다." />
-              <span class="custom-box radio-box"></span> 안한다.
-            </label>
+            <label class="checkbox-label"
+              ><input type="radio" name="vigorous" value="2" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 1-2일</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="vigorous" value="4" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 3-4일</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="vigorous" value="5" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 5일 이상</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="vigorous" value="0" /><span
+                class="custom-box radio-box"
+              ></span>
+              안한다.</label
+            >
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 2번 문항: 가벼운 신체활동 (단일 선택) -->
         <div class="question-group">
           <p class="question-title">
             지난 일주일 동안, 가벼운 물건 나르기, 자전거 타기 등과 같은 가벼운
             신체활동을 며칠간 하셨습니까?
           </p>
           <div class="options-row">
-            <label class="checkbox-label">
-              <input type="radio" name="moderate" value="주 1-2일" />
-              <span class="custom-box radio-box"></span> 주 1-2일
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="moderate" value="주 3-4일" />
-              <span class="custom-box radio-box"></span> 주 3-4일
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="moderate" value="주 5일 이상" />
-              <span class="custom-box radio-box"></span> 주 5일 이상
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="moderate" value="안한다." />
-              <span class="custom-box radio-box"></span> 안한다.
-            </label>
+            <label class="checkbox-label"
+              ><input type="radio" name="moderate" value="2" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 1-2일</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="moderate" value="4" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 3-4일</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="moderate" value="5" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 5일 이상</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="moderate" value="0" /><span
+                class="custom-box radio-box"
+              ></span>
+              안한다.</label
+            >
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 3번 문항: 걷기 활동 (단일 선택) -->
         <div class="question-group">
           <p class="question-title">
             지난 7일간, 한번에 적어도 10분 이상 걸은 날은 며칠입니까?
           </p>
           <div class="options-row">
-            <label class="checkbox-label">
-              <input type="radio" name="walking" value="주 1-2일" />
-              <span class="custom-box radio-box"></span> 주 1-2일
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="walking" value="주 3-4일" />
-              <span class="custom-box radio-box"></span> 주 3-4일
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="walking" value="주 5일 이상" />
-              <span class="custom-box radio-box"></span> 주 5일 이상
-            </label>
-            <label class="checkbox-label">
-              <input type="radio" name="walking" value="안한다." />
-              <span class="custom-box radio-box"></span> 안한다.
-            </label>
+            <label class="checkbox-label"
+              ><input type="radio" name="walking" value="2" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 1-2일</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="walking" value="4" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 3-4일</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="walking" value="5" /><span
+                class="custom-box radio-box"
+              ></span>
+              주 5일 이상</label
+            >
+            <label class="checkbox-label"
+              ><input type="radio" name="walking" value="0" /><span
+                class="custom-box radio-box"
+              ></span>
+              안한다.</label
+            >
           </div>
         </div>
       </form>
 
-      <!-- 하단 다음 버튼 -->
       <div class="button-wrapper">
         <button type="button" id="nextBtn" class="next-btn off" disabled>
           다음
@@ -110,42 +128,6 @@
       </div>
     </main>
 
-    <!-- 유효성 검사 및 버튼 활성화 스크립트 -->
-    <script>
-      const nextBtn = document.getElementById("nextBtn");
-
-      function checkFormValidation() {
-        const vigorousChecked =
-          document.querySelectorAll('input[name="vigorous"]:checked').length >
-          0;
-        const moderateChecked =
-          document.querySelectorAll('input[name="moderate"]:checked').length >
-          0;
-        const walkingChecked =
-          document.querySelectorAll('input[name="walking"]:checked').length > 0;
-
-        // 세 문항 모두 선택되었을 때 다음 버튼 활성화
-        if (vigorousChecked && moderateChecked && walkingChecked) {
-          nextBtn.classList.remove("off");
-          nextBtn.classList.add("on");
-          nextBtn.removeAttribute("disabled");
-        } else {
-          nextBtn.classList.remove("on");
-          nextBtn.classList.add("off");
-          nextBtn.setAttribute("disabled", "true");
-        }
-      }
-
-      const allInputs = document.querySelectorAll('input[type="radio"]');
-      allInputs.forEach((input) => {
-        input.addEventListener("change", checkFormValidation);
-      });
-
-      nextBtn.addEventListener("click", function () {
-        if (!nextBtn.hasAttribute("disabled")) {
-          window.location.href = "survey4.html";
-        }
-      });
-    </script>
+    <script src="../js/survey3.js"></script>
   </body>
 </html>
