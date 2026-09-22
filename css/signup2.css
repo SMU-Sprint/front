@@ -22,7 +22,9 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 70px;
-  transform: scale(1.15); /* 화면을 약 15% 키웁니다 */
+  transform: scale(
+    1.15
+  ); /* 화면을 약 15% 키웁니다 (원하는 비율로 조절 가능: 1.1 ~ 1.3) */
   transform-origin: center center; /* 중앙을 기준으로 확대 */
 }
 
@@ -83,7 +85,6 @@ body {
 .error-message.show {
   visibility: visible;
 }
-
 .agreement-container {
   width: 563px;
   display: flex;
@@ -140,14 +141,12 @@ body {
   transform: rotate(45deg);
 }
 
-/* 다음 버튼 버튼 스타일 초기화 및 영역 설정 */
+/* 다음 버튼 PNG */
 .next-button {
   width: 563px;
   height: 40px;
   display: block;
-  background: transparent;
-  border: none;
-  padding: 0;
+  text-decoration: none;
   cursor: pointer;
 }
 

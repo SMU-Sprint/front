@@ -69,14 +69,96 @@
             위치서비스 제공 동의
           </label>
         </div>
-        <!-- 다음 버튼 (a 태그 대신 일반 버튼 또는 폼 제출 형태로 백엔드 통신 처리) -->
-        <button type="button" id="nextButton" class="next-button">
+        <!-- 다음 버튼 -->
+        <a href="signup3.html" id="nextButton" class="next-button">
           <img id="nextImage" src="../images/next_off.png" alt="다음" />
-        </button>
+        </a>
       </div>
     </main>
 
-    <!-- 외부 자바스크립트 파일 연결 -->
-    <script src="../js/signup2.js"></script>
+    <!-- 네 칸 입력 및 버튼 상태 제어 스크립트 -->
+    <!-- 네 칸 입력, 비밀번호 일치 및 동의 체크박스 상태 제어 스크립트 -->
+    <script>
+      const emailInput = document.getElementById("emailInput");
+      const nameInput = document.getElementById("nameInput");
+      const passwordInput = document.getElementById("passwordInput");
+      const confirmInput = document.getElementById("confirmInput");
+      const privacyCheck = document.getElementById("privacyCheck");
+      const locationCheck = document.getElementById("locationCheck");
+
+      const errorMsg = document.getElementById("errorMsg");
+      const nextButton = document.getElementById("nextButton");
+      const nextImage = document.getElementById("nextImage");
+
+      const inputs = [emailInput, nameInput, passwordInput, confirmInput];
+
+      function updateFormState() {
+        // 1. 각 입력창별 active(초록색 테두리) 처리
+        inputs.forEach((input) => {
+          if (input.value.trim() !== "") {
+            input.classList.add("active");
+          } else {
+            input.classList.remove("active");
+          }
+        });
+
+        const emailVal = emailInput.value.trim();
+        const nameVal = nameInput.value.trim();
+        const pwdVal = passwordInput.value.trim();
+        const confirmVal = confirmInput.value.trim();
+        const isPrivacyChecked = privacyCheck.checked;
+        const isLocationChecked = locationCheck.checked;
+
+        // 2. 비밀번호와 비밀번호 확인 일치 여부 검증
+        if (confirmVal !== "" && pwdVal !== confirmVal) {
+          errorMsg.classList.add("show");
+        } else {
+          errorMsg.classList.remove("show");
+        }
+
+        // 3. 네 칸 모두 입력 + 비밀번호 일치 + 두 동의 체크박스가 모두 체크될 때만 다음 버튼 활성화
+        if (
+          emailVal !== "" &&
+          nameVal !== "" &&
+          pwdVal !== "" &&
+          confirmVal !== "" &&
+          pwdVal === confirmVal &&
+          isPrivacyChecked &&
+          isLocationChecked
+        ) {
+          nextImage.src = "../images/next_on.png";
+        } else {
+          nextImage.src = "../images/next_off.png";
+        }
+      }
+
+      // 입력창 값 변경 시 상태 업데이트
+      inputs.forEach((input) => {
+        input.addEventListener("input", updateFormState);
+      });
+
+      // 체크박스 상태 변경 시 상태 업데이트
+      privacyCheck.addEventListener("change", updateFormState);
+      locationCheck.addEventListener("change", updateFormState);
+
+      // 조건이 맞지 않을 때 다음 버튼 클릭 방지
+      nextButton.addEventListener("click", function (e) {
+        const emailVal = emailInput.value.trim();
+        const nameVal = nameInput.value.trim();
+        const pwdVal = passwordInput.value.trim();
+        const confirmVal = confirmInput.value.trim();
+
+        if (
+          emailVal === "" ||
+          nameVal === "" ||
+          pwdVal === "" ||
+          confirmVal !== pwdVal ||
+          !privacyCheck.checked ||
+          !locationCheck.checked
+        ) {
+          e.preventDefault();
+        }
+      });
+    </script>
   </body>
 </html>
