@@ -36,7 +36,7 @@
           >비밀번호가 일치하지 않습니다.</span
         >
 
-        <!-- 다음 버튼 -->
+        <!-- 다음 버튼 (a 태그 대신 버튼이나 이벤트 제어용 태그 사용) -->
         <a href="#" id="nextButton" class="next-button">
           <img id="nextImage" src="../images/next_off.png" alt="다음" />
         </a>
@@ -66,7 +66,72 @@
       </div>
     </main>
 
-    <!-- 자바스크립트 파일 연결 -->
-    <script src="../js/login.js"></script>
+    <!-- 로그인 검증 및 버튼 상태 제어 스크립트 -->
+    <script>
+      const emailInput = document.getElementById("emailInput");
+      const passwordInput = document.getElementById("passwordInput");
+      const nextImage = document.getElementById("nextImage");
+      const nextButton = document.getElementById("nextButton");
+      const emailError = document.getElementById("emailError");
+      const passwordError = document.getElementById("passwordError");
+
+      // 올바른 로그인 정보 예시 (원하시는 계정 정보로 변경하세요)
+      const correctEmail = "test@codeit.com";
+      const correctPassword = "1234";
+
+      // 1. 입력할 때마다 버튼 이미지를 on/off로 전환
+      function updateButtonState() {
+        if (
+          emailInput.value.trim() !== "" &&
+          passwordInput.value.trim() !== ""
+        ) {
+          nextImage.src = "../images/next_on.png";
+        } else {
+          nextImage.src = "../images/next_off.png";
+          // 입력창이 다시 비워지면 경고문도 숨김 처리
+          emailError.classList.remove("show");
+          passwordError.classList.remove("show");
+        }
+      }
+
+      emailInput.addEventListener("input", updateButtonState);
+      passwordInput.addEventListener("input", updateButtonState);
+
+      // 2. 다음 버튼을 눌렀을 때의 동작
+      nextButton.addEventListener("click", function (e) {
+        e.preventDefault(); // 기본 링크 이동 막기
+
+        const isEmailFilled = emailInput.value.trim() !== "";
+        const isPasswordFilled = passwordInput.value.trim() !== "";
+
+        // off 상태일 때는 클릭해도 아무런 동작 안 함
+        if (!isEmailFilled || !isPasswordFilled) {
+          return;
+        }
+
+        let isValid = true;
+
+        // 이메일 검증
+        if (emailInput.value !== correctEmail) {
+          emailError.classList.add("show");
+          isValid = false;
+        } else {
+          emailError.classList.remove("show");
+        }
+
+        // 비밀번호 검증
+        if (passwordInput.value !== correctPassword) {
+          passwordError.classList.add("show");
+          isValid = false;
+        } else {
+          passwordError.classList.remove("show");
+        }
+
+        // 둘 다 맞으면 main.html로 이동
+        if (isValid) {
+          window.location.href = "main.html";
+        }
+      });
+    </script>
   </body>
 </html>
