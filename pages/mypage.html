@@ -12,7 +12,6 @@
     <div id="sidebar-container"></div>
     <main class="app-shell mypage">
       <section class="profile-card">
-        <!-- 💡 아바타를 클릭해 사진을 업로드할 수 있도록 label과 file input 추가 -->
         <label
           for="profileImageInput"
           class="avatar"
@@ -61,7 +60,6 @@
         </div>
       </section>
 
-      <!-- mypage.html 내부 preferences 섹션 수정 -->
       <section class="preferences">
         <div><span>운동지역</span><strong id="userRegion">00</strong></div>
         <div>
@@ -73,9 +71,14 @@
           ><strong id="userTime">00시,00시,00시</strong>
         </div>
       </section>
+
       <div class="actions">
         <a class="btn primary" href="mypage_correction2.html"
           >회원정보 수정하기</a
+        >
+        <!-- 💡 회원정보 수정하기와 설문하러가기 사이에 비밀번호 변경하기 배너(버튼) 추가 -->
+        <a class="btn password-change" href="reset_password1.html"
+          >비밀번호 변경하기</a
         >
         <a class="btn survey" href="survey1.html">설문하러가기</a>
         <div class="danger-row">
