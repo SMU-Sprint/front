@@ -41,15 +41,7 @@ function updateFormState() {
     }
   });
 
-  // 드롭다운 선택 여부 체크 (기본 placeholder 텍스트가 아니면 선택된 것으로 간주)
-  const regionSelected =
-    regionTrigger && !regionTrigger.classList.contains("placeholder");
-  const daySelected =
-    dayTrigger && !dayTrigger.classList.contains("placeholder");
-  const timeSelected =
-    timeTrigger && !timeTrigger.classList.contains("placeholder");
-
-  // 만약 트리거 버튼의 텍스트가 초기 상태이거나 비어있으면 미완료로 처리
+  // 드롭다운 선택 여부 체크
   const regionVal = regionTrigger ? regionTrigger.textContent.trim() : "";
   const dayVal = dayTrigger ? dayTrigger.textContent.trim() : "";
   const timeVal = timeTrigger ? timeTrigger.textContent.trim() : "";
@@ -71,10 +63,9 @@ numberInputs.forEach((input) => {
   input.addEventListener("input", updateFormState);
 });
 
-// 드롭다운 버튼을 클릭해서 값이 바뀔 때도 상태 업데이트를 감지할 수 있도록 이벤트 위임 또는 감시 설정
+// 드롭다운 버튼을 클릭해서 값이 바뀔 때도 상태 업데이트를 감지
 document.querySelectorAll(".select-panel button").forEach((btn) => {
   btn.addEventListener("click", () => {
-    // DOM이 업데이트된 직후 폼 상태 체크
     setTimeout(updateFormState, 50);
   });
 });
@@ -114,15 +105,21 @@ signupButton.addEventListener("click", async function (e) {
     return;
   }
 
+  // signup2 단계에서 저장해 둔 실제 사용자 이름 가져오기
+  const userName =
+    sessionStorage.getItem("signupName") ||
+    localStorage.getItem("temp_name") ||
+    "홍길동";
+
   try {
     signupButton.style.pointerEvents = "none"; // 중복 클릭 방지
 
-    // 백엔드 명세에 없는 추가 정보(지역, 요일, 시간대)는 로컬스토리지에 백업 저장
+    // 추가 정보(지역, 요일, 시간대)는 로컬스토리지에 백업 저장
     localStorage.setItem("user_region", regionVal);
     localStorage.setItem("user_day", dayVal);
     localStorage.setItem("user_time", timeVal);
 
-    // 백엔드 명세 PATCH /api/v1/members/me 호출
+    // 백엔드 명세 PATCH /api/v1/members/me 호출 (인증 코드 제거됨)
     const response = await fetch("https://sprintkr.site/api/v1/members/me", {
       method: "PATCH",
       headers: {
@@ -130,7 +127,7 @@ signupButton.addEventListener("click", async function (e) {
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        name: localStorage.getItem("temp_name") || "홍길동",
+        name: userName,
         height: heightVal,
         weight: weightVal,
         gender: genderVal,
@@ -141,15 +138,20 @@ signupButton.addEventListener("click", async function (e) {
     const data = await response.json();
 
     if (response.ok && data.isSuccess) {
+      // 사용이 끝난 임시 세션 데이터 정리
+      sessionStorage.removeItem("signupName");
+      sessionStorage.removeItem("authCode");
+      sessionStorage.removeItem("signupEmail");
+
       alert("사용자 정보 등록이 완료되었습니다!");
       window.location.href = "survey1.html"; // 다음 설문 페이지로 이동
     } else {
       alert(data.message || "정보 등록에 실패했습니다.");
+      signupButton.style.pointerEvents = "auto";
     }
   } catch (error) {
     console.error("통신 에러:", error);
     alert("서버와 통신 중 오류가 발생했습니다.");
-  } finally {
     signupButton.style.pointerEvents = "auto";
   }
 });

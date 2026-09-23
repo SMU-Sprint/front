@@ -12,7 +12,21 @@
     <div id="sidebar-container"></div>
     <main class="app-shell mypage">
       <section class="profile-card">
-        <div class="avatar" aria-label="프로필 이미지"></div>
+        <!-- 💡 아바타를 클릭해 사진을 업로드할 수 있도록 label과 file input 추가 -->
+        <label
+          for="profileImageInput"
+          class="avatar"
+          aria-label="프로필 이미지 선택"
+        >
+          <input
+            type="file"
+            id="profileImageInput"
+            accept="image/*"
+            style="display: none"
+          />
+          <span class="avatar-placeholder-text">사진 변경</span>
+        </label>
+
         <div class="profile-grid">
           <div class="info-row">
             <span>나이</span>
@@ -60,7 +74,7 @@
         </div>
       </section>
       <div class="actions">
-        <a class="btn primary" href="mypage_correction1.html"
+        <a class="btn primary" href="mypage_correction2.html"
           >회원정보 수정하기</a
         >
         <a class="btn survey" href="survey1.html">설문하러가기</a>
