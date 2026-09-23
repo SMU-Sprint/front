@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (res.ok && data.isSuccess && data.result) {
       const user = data.result;
 
-      originalName = user.name || "홍길동";
+      originalName =
+        user.name && user.name.trim() !== "" ? user.name : "홍길동";
       originalGender = user.gender || "MALE";
 
       if (ageInput) ageInput.value = user.age ?? "";
@@ -55,7 +56,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const savedDay = localStorage.getItem("user_day");
   const savedTime = localStorage.getItem("user_time");
 
-  // 1) 운동지역 세팅 및 패널 버튼 동기화 (단일 선택)
   if (regionTrigger && savedRegion) {
     regionTrigger.textContent = savedRegion;
     regionTrigger.classList.add("active");
@@ -75,12 +75,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // 2) 선호하는 운동 요일 세팅 및 패널 버튼 동기화 (다중 선택)
   if (dayTrigger && savedDay) {
     dayTrigger.textContent = savedDay;
     dayTrigger.classList.add("active");
 
-    // 저장된 요일들을 배열로 변환 (예: "월, 수, 금" -> ["월", "수", "금"])
     const dayArray = savedDay.split(/,\s*/);
     const dayPanel = document.getElementById("day-panel");
     if (dayPanel) {
@@ -97,7 +95,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // 3) 선호하는 운동 시간대 세팅 및 패널 버튼 동기화 (다중 선택)
   if (timeTrigger && savedTime) {
     timeTrigger.textContent = savedTime;
     timeTrigger.classList.add("active");
@@ -134,13 +131,23 @@ document.addEventListener("DOMContentLoaded", async function () {
       const dayVal = dayTrigger ? dayTrigger.textContent.trim() : "";
       const timeVal = timeTrigger ? timeTrigger.textContent.trim() : "";
 
+      // 💡 1단계(인증 페이지)에서 저장해 둔 이메일 인증 코드를 가져옴
+      const verificationCode =
+        sessionStorage.getItem("verification_code") || "";
+
+      // 만약 테스트 중이라 세션에 코드가 없다면 임시 코드("123456" 등)나 입력받은 값을 사용할 수 있습니다.
+      // 정상 흐름이라면 앞 단계(mypage_correction1.js)에서 인증 성공 시 sessionStorage에 저장해 두어야 합니다.
+
       const updateData = {
-        name: originalName,
+        code: verificationCode, // 👈 필수 파라미터인 인증 코드 추가
+        name: originalName || "홍길동",
         height: height,
         weight: weight,
         gender: originalGender,
         age: age,
       };
+
+      console.log("== [서버로 전송하는 회원 수정 데이터] ===", updateData);
 
       try {
         submitBtn.style.pointerEvents = "none";
@@ -159,6 +166,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         );
 
         const result = await response.json();
+        console.log("== [회원 수정 응답 결과] ===", result);
 
         if (response.ok && result.isSuccess) {
           if (regionVal && !regionVal.includes("선택"))
@@ -167,6 +175,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             localStorage.setItem("user_day", dayVal);
           if (timeVal && !timeVal.includes("선택"))
             localStorage.setItem("user_time", timeVal);
+
+          // 사용이 끝난 인증 코드는 세션에서 제거
+          sessionStorage.removeItem("verification_code");
 
           alert("회원 정보가 성공적으로 수정되었습니다.");
           window.location.href = "mypage.html";
