@@ -7,9 +7,14 @@
     <link rel="stylesheet" href="../css/location.css" />
     <link rel="stylesheet" href="../css/sidebar.css" />
     <script src="../js/app.js" defer></script>
+    <script
+      src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=5dd186629d1ef37a8c1e69161acc639c&autoload=false&libraries=clusterer"
+      defer
+    ></script>
+    <script src="../js/location-map.js" defer></script>
   </head>
 
-  <body data-page="place">
+  <body data-page="place" data-workout-page="locations">
     <div class="page-wrapper">
       <!-- 사이드바 영역: 배경 없이 개별 버튼 이미지 세 개를 수직 나열 -->
       <div id="sidebar-container"></div>
@@ -19,18 +24,11 @@
         class="main-section"
         style="background-image: url(&quot;../images/location.png&quot;)"
       >
-        <!-- 추후 지도 API가 얹어질 공간 -->
         <div id="mapContainer" class="map-container">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d101235.39433917822!2d126.89136195729724!3d37.53488210359146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2012d5c39cf%3A0x7e11eca1405bf29b!2z7ISc7Jq47Yq567OE7Iuc!5e0!3m2!1sko!2skr!4v1700000000000!5m2!1sko!2skr"
-            width="100%"
-            height="100%"
-            style="border: 0"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          >
-          </iframe>
+          <div id="kakaoMap" class="kakao-map" aria-label="체육시설 지도"></div>
+          <div id="mapStatus" class="map-status">
+            장소 데이터를 불러오는 중입니다.
+          </div>
         </div>
       </section>
     </div>
