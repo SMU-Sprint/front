@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (memberResponse.ok && memberData.isSuccess && memberData.result) {
       const user = memberData.result;
 
-      // 프로필 카드 데이터 렌더링
       const ageElem = document.getElementById("profileAge");
       const genderElem = document.getElementById("profileGender");
       const heightElem = document.getElementById("profileHeight");
@@ -50,7 +49,36 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   // ==========================================
-  // 2. 프론트엔드(LocalStorage)에 저장된 운동 지역, 요일, 시간대 불러오기
+  // 2. 프로필 이미지 업로드 및 로컬스토리지 영구 저장/불러오기
+  // ==========================================
+  const avatarElem = document.querySelector(".avatar");
+  const profileImageInput = document.getElementById("profileImageInput");
+
+  // 저장된 프로필 이미지가 있다면 불러와서 적용
+  const savedProfileImg = localStorage.getItem("user_profile_image");
+  if (savedProfileImg && avatarElem) {
+    avatarElem.style.backgroundImage = `url(${savedProfileImg})`;
+  }
+
+  // 파일 업로드 시 Base64로 변환 후 로컬스토리지 저장
+  if (profileImageInput && avatarElem) {
+    profileImageInput.addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (uploadEvent) {
+        const base64Image = uploadEvent.target.result;
+        localStorage.setItem("user_profile_image", base64Image);
+        avatarElem.style.backgroundImage = `url(${base64Image})`;
+        alert("프로필 사진이 성공적으로 변경되었습니다!");
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ==========================================
+  // 3. 선호 운동 정보(지역, 요일, 시간대) 불러오기
   // ==========================================
   const savedRegion = localStorage.getItem("user_region");
   const savedDay = localStorage.getItem("user_day");
@@ -65,10 +93,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (timeElem && savedTime) timeElem.textContent = savedTime;
 
   // ==========================================
-  // 3. 로그아웃 기능
-  // ==========================================
-  // ==========================================
-  // 로그아웃 기능 (수정 버전)
+  // 4. 로그아웃 기능 (인증 토큰만 삭제, 프로필 사진 및 설정은 유지)
   // ==========================================
   const logoutModal = document.getElementById("logout-modal");
   if (logoutModal) {
@@ -89,19 +114,18 @@ document.addEventListener("DOMContentLoaded", async function () {
       } catch (error) {
         console.error("로그아웃 통신 에러:", error);
       } finally {
-        // 💡 수정: 전체 clear()를 하면 지역/요일/시간대까지 지워지므로,
-        // 로그인 인증 정보(accessToken 등)만 골라서 삭제하고 설정 데이터는 유지합니다!
+        // 토큰만 골라서 삭제 (프로필 사진, 운동 지역/요일/시간은 보존됨)
         localStorage.removeItem("accessToken");
-        // 만약 리프레시 토큰이나 임시 이름을 로컬스토리지에 따로 저장하셨다면 그것들도 여기서 removeItem 해주세요.
+        localStorage.removeItem("refreshToken");
 
-        sessionStorage.clear(); // 세션 저장소는 설문 단계별 임시 데이터이므로 초기화
+        sessionStorage.clear();
         window.location.href = "login.html";
       }
     });
   }
 
   // ==========================================
-  // 4. 회원 탈퇴 기능
+  // 5. 회원 탈퇴 기능 (탈퇴 시 모든 로컬 데이터 완전히 초기화)
   // ==========================================
   const withdrawModal = document.getElementById("withdraw-modal");
   if (withdrawModal) {
@@ -128,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (response.ok && data.isSuccess) {
           alert("회원 탈퇴가 정상적으로 처리되었습니다.");
-          localStorage.clear();
+          localStorage.clear(); // 탈퇴 시에는 프로필 사진 포함 모든 정보 삭제
           sessionStorage.clear();
           window.location.href = "login.html";
         } else {
