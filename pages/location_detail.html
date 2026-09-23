@@ -24,14 +24,22 @@
       <div id="sidebar-container"></div>
 
       <!-- 오른쪽 메인 장소/지도 영역 -->
-      <section
-        class="main-section"
->
+      <section class="main-section">
         <!-- 지도 영역 -->
         <div class="map-and-locations">
-          <div id="workout-map" class="map-container" aria-label="운동 장소 지도"></div>
-          <div id="location-list" class="location-list" aria-label="운동 장소 목록"></div>
-          <p class="demo-note" data-demo-note hidden>체험 모드 · 장소·종목은 예시이며, 기록은 이 브라우저에만 저장됩니다.</p>
+          <div
+            id="workout-map"
+            class="map-container"
+            aria-label="운동 장소 지도"
+          ></div>
+          <div
+            id="location-list"
+            class="location-list"
+            aria-label="운동 장소 목록"
+          ></div>
+          <p class="demo-note" data-demo-note hidden>
+            체험 모드 · 장소·종목은 예시이며, 기록은 이 브라우저에만 저장됩니다.
+          </p>
           <p id="workout-message" class="workout-message" role="status"></p>
         </div>
 
@@ -45,21 +53,49 @@
             <small id="location-name">장소를 선택하세요</small>
             <p id="location-meta" class="location-meta"></p>
             <div class="sport-picker">
-              <button type="button" id="sport-trigger" class="sport-name" aria-haspopup="listbox" aria-expanded="false" aria-controls="sport-options" disabled>운동 선택 ▾</button>
-              <div id="sport-options" class="sport-options" role="listbox" aria-label="가능한 운동" hidden></div>
+              <button
+                type="button"
+                id="sport-trigger"
+                class="sport-name"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="sport-options"
+                disabled
+              >
+                운동 선택 ▾
+              </button>
+              <div
+                id="sport-options"
+                class="sport-options"
+                role="listbox"
+                aria-label="가능한 운동"
+                hidden
+              ></div>
             </div>
           </div>
           <div class="info-section">
-            <button type="button" id="startBtn" class="action-btn start-btn" disabled>시작하기</button>
+            <button
+              type="button"
+              id="startBtn"
+              class="action-btn start-btn"
+              disabled
+            >
+              시작하기
+            </button>
           </div>
           <div class="info-section">
-            <button type="button" id="endBtn" class="action-btn end-btn" disabled>종료하기</button>
+            <button
+              type="button"
+              id="endBtn"
+              class="action-btn end-btn"
+              disabled
+            >
+              종료하기
+            </button>
             <a href="main.html" class="view-session">메인에서 시간 확인</a>
           </div>
         </aside>
       </section>
     </div>
-
-
   </body>
 </html>

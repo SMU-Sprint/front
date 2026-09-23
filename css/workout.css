@@ -1,71 +1,394 @@
 /* Shared additions retain the existing green/orange panels and calendar layout. */
-[hidden] { display: none !important; }
-button:disabled { cursor: default; opacity: .5; }
-button:focus-visible, a:focus-visible { outline: 2px solid var(--main4); outline-offset: 3px; }
-.demo-note { font-size: 13px; color: #64716a; line-height: 1.6; margin: 8px 0 0; }
-.workout-message { font-size: 14px; color: var(--main4); line-height: 1.6; min-height: 22px; margin: 4px 0; }
-.workout-message.is-error { color: #b34516; }
-.map-and-locations { width: min(800px, 100%); min-width: 0; }
-.map-and-locations .map-container { width: 100%; height: 550px; max-height: none; background: #e7eee7; border-radius: 16px; z-index: 0; }
-.map-unavailable { display: grid; place-items: center; padding: 30px; text-align: center; color: #52655b; }
-.location-list { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 2px; }
-.location-choice { flex: 0 0 auto; border: 1px solid var(--main4); border-radius: 20px; padding: 8px 16px; background: white; color: var(--main4); cursor: pointer; font-size: 15px; }
-.location-choice[aria-pressed="true"] { background: var(--main4); color: white; }
-body[data-workout-page] { overflow: auto; }
-body[data-workout-page] .page-wrapper { height: auto; min-height: 100vh; }
-body[data-workout-page] .main-section { height: auto; min-height: 100vh; padding: 30px; gap: 30px; }
-body[data-workout-page="locations"] .map-and-locations { width: 100%; max-width: 1300px; }
-body[data-workout-page="locations"] .map-container { height: 70vh; }
-.sport-section { position: relative; padding: 12px; gap: 10px; }
-#location-name { font-size: 15px; color: #64716a; }
-.location-meta { max-width: 240px; min-height: 34px; font-size: 12px; line-height: 1.45; color: #7a877f; overflow-wrap: anywhere; }
-.sport-picker { width: 100%; position: relative; }
-.sport-picker .sport-name { width: 100%; border: 0; background: transparent; font-size: 32px; padding: 8px 0; cursor: pointer; }
-.sport-options { position: absolute; top: 100%; left: 0; right: 0; max-height: 190px; overflow-y: auto; background: white; border: 1px solid var(--main4); border-radius: 12px; padding: 5px; z-index: 5; box-shadow: 0 8px 20px #0002; }
-.sport-options button { width: 100%; display: block; border: 0; border-radius: 8px; padding: 12px; font-size: 19px; color: var(--main4); background: white; cursor: pointer; }
-.sport-options button:hover, .sport-options button[aria-selected="true"] { background: var(--main1); }
-.view-session { font-size: 14px; color: var(--main4); margin-top: 12px; }
-.calendar-day { aspect-ratio: 1; border: 0; border-radius: 3px; font: inherit; font-size: 13px; padding: 0; cursor: pointer; color: #24372c; }
-.mini-grid .calendar-day { font-size: 10px; }
-.calendar-day.level-dark { background: var(--dark); }
-.calendar-day.level-main1 { background: var(--main1); }
-.calendar-day.level-main2 { background: var(--main2); }
-.calendar-day.level-main3 { background: var(--main3); }
-.calendar-day.level-main4 { background: var(--main4); color: white; }
-.calendar-day[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--highlight); }
-.daily-records { margin-top: 25px; padding-top: 16px; border-top: 1px solid #dce9df; }
-.record-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.record-heading h2 { font-size: 16px; margin: 0; font-weight: 500; }
-.record-heading button { border: 0; background: transparent; color: var(--main4); cursor: pointer; padding: 6px 0; white-space: nowrap; }
-#record-total { font-size: 14px; color: var(--main4); margin: 8px 0; }
-#record-list { list-style: none; padding: 0; margin: 0; max-height: 210px; overflow-y: auto; font-size: 14px; color: #52655b; line-height: 1.6; }
-#record-list li { padding: 10px 0; display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid #edf1ed; }
-#record-list li small { grid-column: 1 / -1; font-size: 12px; overflow-wrap: anywhere; }
-#record-list li strong { color: var(--main4); }
-.session-card .exercise strong { font-weight: 500; font-size: 34px; }
-.session-card small { display: block; font-size: 14px; color: #64716a; margin: 5px 0; }
-.workout-end { border: 0; border-radius: 22px; background: var(--main4); color: white; padding: 8px 24px; font-size: 18px; cursor: pointer; margin: 10px auto 0; }
-.dashboard-notices { grid-column: 1 / -1; }
-.dashboard { row-gap: 12px; }
+[hidden] {
+  display: none !important;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--main4);
+  outline-offset: 3px;
+}
+
+.demo-note {
+  font-size: 13px;
+  color: #64716a;
+  line-height: 1.6;
+  margin: 8px 0 0;
+}
+
+.workout-message {
+  font-size: 14px;
+  color: var(--main4);
+  line-height: 1.6;
+  min-height: 22px;
+  margin: 4px 0;
+}
+
+.workout-message.is-error {
+  color: #b34516;
+}
+
+.map-and-locations {
+  width: min(800px, 100%);
+  min-width: 0;
+}
+
+.map-and-locations .map-container {
+  width: 100%;
+  height: 550px;
+  max-height: none;
+  background: #e7eee7;
+  border-radius: 16px;
+  z-index: 0;
+}
+
+.map-unavailable {
+  display: grid;
+  place-items: center;
+  padding: 30px;
+  text-align: center;
+  color: #52655b;
+}
+
+.location-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0 2px;
+}
+
+.location-choice {
+  flex: 0 0 auto;
+  border: 1px solid var(--main4);
+  border-radius: 20px;
+  padding: 8px 16px;
+  background: white;
+  color: var(--main4);
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.location-choice[aria-pressed="true"] {
+  background: var(--main4);
+  color: white;
+}
+
+body[data-workout-page] {
+  overflow: auto;
+}
+
+body[data-workout-page] .page-wrapper {
+  height: auto;
+  min-height: 100vh;
+}
+
+body[data-workout-page] .main-section {
+  height: auto;
+  min-height: 100vh;
+  padding: 30px;
+  gap: 30px;
+}
+
+body[data-workout-page="locations"] .map-and-locations {
+  width: 100%;
+  max-width: 1300px;
+}
+
+body[data-workout-page="locations"] .map-container {
+  height: 70vh;
+}
+
+.sport-section {
+  position: relative;
+  padding: 12px;
+  gap: 10px;
+}
+
+#location-name {
+  font-size: 15px;
+  color: #64716a;
+}
+
+.location-meta {
+  max-width: 240px;
+  min-height: 34px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #7a877f;
+  overflow-wrap: anywhere;
+}
+
+.sport-picker {
+  width: 100%;
+  position: relative;
+}
+
+.sport-picker .sport-name {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-size: 32px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.sport-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 190px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid var(--main4);
+  border-radius: 12px;
+  padding: 5px;
+  z-index: 5;
+  box-shadow: 0 8px 20px #0002;
+}
+.sport-options button {
+  width: 100%;
+  display: block;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 19px;
+  color: var(--main4);
+  background: white;
+  cursor: pointer;
+}
+
+.sport-options button:hover,
+.sport-options button[aria-selected="true"] {
+  background: var(--main1);
+}
+
+.view-session {
+  font-size: 14px;
+  color: var(--main4);
+  margin-top: 12px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 3px;
+  font: inherit;
+  font-size: 13px;
+  padding: 0;
+  cursor: pointer;
+  color: #24372c;
+}
+
+.mini-grid .calendar-day {
+  font-size: 10px;
+}
+
+.calendar-day.level-dark {
+  background: var(--dark);
+}
+
+.calendar-day.level-main1 {
+  background: var(--main1);
+}
+
+.calendar-day.level-main2 {
+  background: var(--main2);
+}
+
+.calendar-day.level-main3 {
+  background: var(--main3);
+}
+
+.calendar-day.level-main4 {
+  background: var(--main4);
+  color: white;
+}
+
+.calendar-day[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--highlight);
+}
+
+.daily-records {
+  margin-top: 25px;
+  padding-top: 16px;
+  border-top: 1px solid #dce9df;
+}
+
+.record-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.record-heading h2 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.record-heading button {
+  border: 0;
+  background: transparent;
+  color: var(--main4);
+  cursor: pointer;
+  padding: 6px 0;
+  white-space: nowrap;
+}
+
+#record-total {
+  font-size: 14px;
+  color: var(--main4);
+  margin: 8px 0;
+}
+
+#record-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 210px;
+  overflow-y: auto;
+  font-size: 14px;
+  color: #52655b;
+  line-height: 1.6;
+}
+
+#record-list li {
+  padding: 10px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  border-bottom: 1px solid #edf1ed;
+}
+
+#record-list li small {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+#record-list li strong {
+  color: var(--main4);
+}
+
+.session-card .exercise strong {
+  font-weight: 500;
+  font-size: 34px;
+}
+
+.session-card small {
+  display: block;
+  font-size: 14px;
+  color: #64716a;
+  margin: 5px 0;
+}
+
+.workout-end {
+  border: 0;
+  border-radius: 22px;
+  background: var(--main4);
+  color: white;
+  padding: 8px 24px;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 10px auto 0;
+}
+
+.dashboard-notices {
+  grid-column: 1 / -1;
+}
+
+.dashboard {
+  row-gap: 12px;
+}
+
 @media (max-width: 1200px) {
-  .dashboard { grid-template-columns: 200px minmax(300px, 1fr) 240px; padding: 30px 20px; column-gap: 16px; }
-  .legend { gap: 4px; }.legend i { width: 14px; height: 14px; }
-  .week { font-size: 16px; }.date strong { font-size: 30px; }
-  .mini-card { padding-left: 12px; padding-right: 12px; }.mini-grid { gap: 5px; }
+  .dashboard {
+    grid-template-columns: 200px minmax(300px, 1fr) 240px;
+    padding: 30px 20px;
+    column-gap: 16px;
+  }
+  .legend {
+    gap: 4px;
+  }
+  .legend i {
+    width: 14px;
+    height: 14px;
+  }
+  .week {
+    font-size: 16px;
+  }
+  .date strong {
+    font-size: 30px;
+  }
+  .mini-card {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .mini-grid {
+    gap: 5px;
+  }
 }
+
 @media (max-width: 1000px) {
-  .dashboard { grid-template-columns: minmax(280px, 1fr) 260px; }
-  .mini-calendars { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
-  .mini-card { min-height: 0; }.mini-grid .calendar-day { aspect-ratio: auto; min-height: 24px; }
-  body[data-workout-page] .main-section { flex-direction: column; }
-  body[data-workout-page] .info-panel { width: 100%; max-width: 800px; height: auto; min-height: 500px; }
-  body[data-workout-page] .info-section { min-height: 140px; }
+  .dashboard {
+    grid-template-columns: minmax(280px, 1fr) 260px;
+  }
+  .mini-calendars {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+  }
+  .mini-card {
+    min-height: 0;
+  }
+  .mini-grid .calendar-day {
+    aspect-ratio: auto;
+    min-height: 24px;
+  }
+  body[data-workout-page] .main-section {
+    flex-direction: column;
+  }
+  body[data-workout-page] .info-panel {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    min-height: 500px;
+  }
+  body[data-workout-page] .info-section {
+    min-height: 140px;
+  }
 }
+
 @media (max-width: 760px) {
-  .dashboard { display: flex; flex-direction: column; padding: 20px 16px 110px; }
-  .mini-calendars, .calendar-card, .session-card { width: 100%; }
-  .calendar-card { min-height: 0; }.session-card { min-height: 600px; }
-  body[data-workout-page] .page-wrapper { width: 100%; margin-left: 0; }
-  body[data-workout-page] .main-section { padding: 20px 16px 110px; }
-  .map-and-locations .map-container { height: 380px; }
+  .dashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px 110px;
+  }
+  .mini-calendars,
+  .calendar-card,
+  .session-card {
+    width: 100%;
+  }
+  .calendar-card {
+    min-height: 0;
+  }
+  .session-card {
+    min-height: 600px;
+  }
+  body[data-workout-page] .page-wrapper {
+    width: 100%;
+    margin-left: 0;
+  }
+  body[data-workout-page] .main-section {
+    padding: 20px 16px 110px;
+  }
+  .map-and-locations .map-container {
+    height: 380px;
+  }
 }
