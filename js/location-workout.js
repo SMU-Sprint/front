@@ -1,17 +1,17 @@
-const FACILITIES_DATA_URL = '../data/facilities.json';
-
-async function loadFacilities() {
-  const response = await fetch(FACILITIES_DATA_URL);
-  if (!response.ok) throw new Error('운동 장소 정보를 불러오지 못했습니다.');
-
-  const facilities = await response.json();
-  return facilities.map(facility => ({
-      ...facility,
-      latitude: Number(facility.lat),
-      longitude: Number(facility.lng),
-      imported: true,
-    }))
-    .filter(facility => Number.isFinite(facility.latitude) && Number.isFinite(facility.longitude));
+function readSelectedFacility(locationId) {
+  try {
+    const facility = JSON.parse(
+      sessionStorage.getItem(SprintWorkout.SELECTED_FACILITY_KEY),
+    );
+    if (
+      String(facility?.id) !== String(locationId) ||
+      !Number.isFinite(Number(facility?.latitude)) ||
+      !Number.isFinite(Number(facility?.longitude))
+    ) return null;
+    return facility;
+  } catch {
+    return null;
+  }
 }
 
 (async () => {
@@ -35,7 +35,11 @@ async function loadFacilities() {
     selectedLocation = location; selectedSport = null; options.replaceChildren(); close();
     trigger.textContent = '운동 불러오는 중…';
     locationName.textContent = location.name;
-    locationMeta.textContent = [location.type, location.address].filter(Boolean).join(' · ');
+    const openingHours = location.openTime || location.closeTime
+      ? `${location.openTime || '미정'}~${location.closeTime || '미정'}`
+      : '';
+    locationMeta.textContent = [location.type, location.address, openingHours].filter(Boolean).join(' · ');
+    sessionStorage.setItem(SprintWorkout.SELECTED_FACILITY_KEY, JSON.stringify(location));
     const url = new URL(window.location.href); url.searchParams.set('locationId', location.id); history.replaceState(null, '', url);
     document.querySelectorAll('.location-choice').forEach(button => button.setAttribute('aria-pressed', String(button.textContent === location.name)));
     render();
@@ -104,7 +108,9 @@ async function loadFacilities() {
       render();
     } catch (error) { message(error.message, true); }
   }
-  window.addEventListener('storage', event => { if (event.key === SprintWorkout.STORAGE_KEY) syncActive(); });
+  window.addEventListener('storage', event => {
+    if ([SprintWorkout.STORAGE_KEY, SprintWorkout.API_ACTIVE_KEY].includes(event.key)) syncActive();
+  });
   window.addEventListener('pageshow', event => { if (event.persisted) syncActive(); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) syncActive(); });
   try {
@@ -114,15 +120,24 @@ async function loadFacilities() {
       return;
     }
 
-    const [facilities, overview] = await Promise.all([
-      loadFacilities(),
-      service.overview(dateKey(), dateKey()),
-    ]);
-    const selected = facilities.find(facility => facility.id === locationId);
+    const selected = readSelectedFacility(locationId);
     if (!selected) {
       window.location.replace('location.html');
       return;
     }
+
+    const [nearbyFacilities, overview] = await Promise.all([
+      service.locations({
+        latitude: selected.latitude,
+        longitude: selected.longitude,
+        radiusKm: 3,
+      }),
+      service.overview(dateKey(), dateKey()),
+    ]);
+    const facilities = [
+      selected,
+      ...nearbyFacilities.filter(facility => facility.id !== selected.id),
+    ];
 
     await WorkoutMap.render(facilities, selectLocation, selected.id);
     activeSession = overview.activeSession;

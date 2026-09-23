@@ -31,8 +31,11 @@ if (typeof document !== 'undefined') window.WorkoutCalendar = {
           cell.type = 'button'; cell.className = `calendar-day level-${color}`;
           cell.textContent = day; cell.dataset.date = date;
           cell.setAttribute('aria-pressed', String(date === selectedDate));
-          cell.title = `${date} · ${WorkoutUI.duration(total?.totalSeconds || 0)}`;
-          cell.setAttribute('aria-label', `${date}, 운동 ${WorkoutUI.duration(total?.totalSeconds || 0)}`);
+          const summary = Number.isFinite(total?.totalSeconds)
+            ? WorkoutUI.duration(total.totalSeconds)
+            : `기록 ${total?.count || 0}건`;
+          cell.title = `${date} · ${summary}`;
+          cell.setAttribute('aria-label', `${date}, 운동 ${summary}`);
           if (date === WorkoutUI.dateKey(now)) { cell.classList.add('today'); cell.setAttribute('aria-current', 'date'); }
           cell.addEventListener('click', () => onSelect(date));
         }

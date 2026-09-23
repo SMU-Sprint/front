@@ -69,8 +69,15 @@
         const detail = document.createElement("small");
         title.textContent = record.sportName;
         elapsed.textContent = duration(record.durationSeconds);
-        detail.textContent = `${record.locationName} · ${time(record.segmentStartedAt || record.startedAt)}–${time(record.segmentEndedAt || record.endedAt)}`;
-        row.append(title, elapsed, detail);
+        const startedAt = record.segmentStartedAt || record.startedAt;
+        const endedAt = record.segmentEndedAt || record.endedAt;
+        const details = [record.locationName];
+        if (startedAt && endedAt) {
+          details.push(`${time(startedAt)}–${time(endedAt)}`);
+        }
+        detail.textContent = details.filter(Boolean).join(" · ");
+        row.append(title, elapsed);
+        if (detail.textContent) row.append(detail);
         list.append(row);
       });
     } catch (error) {
