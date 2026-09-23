@@ -17,7 +17,7 @@
           <div class="info-row">
             <span>나이</span>
             <div class="value-with-unit">
-              <strong>00</strong>
+              <strong id="profileAge">00</strong>
               <span>세</span>
             </div>
           </div>
@@ -25,14 +25,14 @@
           <div class="info-row">
             <span>성별</span>
             <div class="value-with-unit">
-              <strong>성별</strong>
+              <strong id="profileGender">성별</strong>
             </div>
           </div>
 
           <div class="info-row">
             <span>키</span>
             <div class="value-with-unit">
-              <strong>000</strong>
+              <strong id="profileHeight">000</strong>
               <span>cm</span>
             </div>
           </div>
@@ -40,27 +40,30 @@
           <div class="info-row">
             <span>몸무게</span>
             <div class="value-with-unit">
-              <strong>00</strong>
+              <strong id="profileWeight">00</strong>
               <span>kg</span>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- mypage.html 내부 preferences 섹션 수정 -->
       <section class="preferences">
-        <div><span>운동지역</span><strong>00</strong></div>
+        <div><span>운동지역</span><strong id="userRegion">00</strong></div>
         <div>
-          <span>선호하는 운동 요일</span><strong>00, 00, 00, 00</strong>
+          <span>선호하는 운동 요일</span
+          ><strong id="userDay">00, 00, 00, 00</strong>
         </div>
         <div>
-          <span>선호하는 운동 시간대</span><strong>00시,00시,00시</strong>
+          <span>선호하는 운동 시간대</span
+          ><strong id="userTime">00시,00시,00시</strong>
         </div>
       </section>
       <div class="actions">
         <a class="btn primary" href="mypage_correction1.html"
           >회원정보 수정하기</a
         >
-        <a class="btn survey" href="#">설문하러가기</a>
+        <a class="btn survey" href="survey1.html">설문하러가기</a>
         <div class="danger-row">
           <button class="btn danger" data-modal-open="logout-modal">
             로그아웃
@@ -76,8 +79,7 @@
       <div class="modal-box">
         <p>정말 로그아웃하시겠습니까?</p>
         <div>
-          <button class="outline" onclick="location.href = 'main.html'">
-            예</button
+          <button class="outline">예</button
           ><button class="filled" data-modal-close>아니요</button>
         </div>
       </div>
@@ -91,5 +93,6 @@
         </div>
       </div>
     </dialog>
+    <script src="../js/mypage.js" defer></script>
   </body>
 </html>

@@ -1,3 +1,6 @@
+/* ==========================================
+   기존 원본 CSS 전체 유지 (여기에 그대로 두세요)
+   ========================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,7 +16,6 @@ body {
   align-items: center;
 }
 
-/* 전체 로그인 화면 */
 .login-container {
   width: 100%;
   max-width: 1230px;
@@ -22,12 +24,10 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 70px;
-  transform: scale(
-    1.15
-  ); /* 화면을 약 15% 키웁니다 (원하는 비율로 조절 가능: 1.1 ~ 1.3) */
-  transform-origin: center center; /* 중앙을 기준으로 확대 */
+  transform: scale(1.15);
+  transform-origin: center center;
 }
-/* 타이틀 */
+
 .title {
   font-size: 40px;
   font-weight: 500;
@@ -35,7 +35,6 @@ body {
   margin-bottom: 30px;
 }
 
-/* 입력 영역 폼 */
 .login-form {
   width: 563px;
   display: flex;
@@ -43,7 +42,6 @@ body {
   align-items: center;
 }
 
-/* 성별 선택 탭 컨테이너 */
 .gender-container {
   width: 563px;
   height: 40px;
@@ -55,7 +53,6 @@ body {
   background-color: transparent;
 }
 
-/* 남성/여성 버튼 */
 .gender-btn {
   width: 50%;
   height: 100%;
@@ -68,13 +65,11 @@ body {
   transition: all 0.2s ease;
 }
 
-/* 선택된 성별 버튼 스타일 (초록색 배경, 흰색 글씨) */
 .gender-btn.active {
   background-color: #17706e;
   color: #ffffff;
 }
 
-/* 단위(cm, kg)가 붙는 인풋을 감싸는 래퍼 */
 .input-suffix-wrap {
   position: relative;
   width: 563px;
@@ -86,7 +81,6 @@ body {
   margin-bottom: 0;
 }
 
-/* cm, kg 텍스트 위치 */
 .suffix {
   position: absolute;
   right: 20px;
@@ -97,7 +91,6 @@ body {
   pointer-events: none;
 }
 
-/* 기본 입력창 (초기 회색 테두리) */
 .login-input {
   width: 563px;
   height: 40px;
@@ -111,17 +104,14 @@ body {
   margin-bottom: 35px;
 }
 
-/* 값이 입력되어 초록색으로 바뀐 상태 (.active 클래스) */
 .login-input.active {
   border-color: #17706e;
 }
 
-/* placeholder */
 .login-input::placeholder {
   color: #d9d9d9;
 }
 
-/* 회원가입하기 버튼 PNG 컨테이너 */
 .signup-btn {
   width: 563px;
   height: 40px;
@@ -130,10 +120,130 @@ body {
   cursor: pointer;
 }
 
-/* 회원가입하기 버튼 이미지 */
 .signup-btn img {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: contain;
+}
+
+/* ==========================================
+   ✨ [추가] 지역, 요일, 시간대 드롭다운 패널 전용 스타일
+   ========================================== */
+.select-field {
+  position: relative;
+  width: 563px;
+  margin-bottom: 35px;
+}
+
+.select-trigger {
+  width: 100%;
+  height: 40px;
+  border: 2px solid #d9d9d9;
+  border-radius: 22px;
+  background-color: transparent;
+  padding: 0 18px;
+  font-size: 17px;
+  color: #777;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.select-trigger.active {
+  border-color: #17706e;
+  color: #333;
+}
+
+.select-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  display: none;
+  width: 100%;
+  padding: 12px;
+  background: #ffffff;
+  border: 2px solid #17706e;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.select-panel.open {
+  display: block;
+}
+
+.region-panel {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.region-panel button {
+  width: 100%;
+  height: 38px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  padding: 0 10px;
+  border-radius: 8px;
+}
+
+.region-panel button:hover,
+.region-panel button.selected {
+  background: rgba(23, 112, 110, 0.1);
+  color: #17706e;
+  font-weight: bold;
+}
+
+.day-panel {
+  display: none;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day-panel.open {
+  display: grid;
+}
+
+.day-panel button {
+  height: 36px;
+  border: 1px solid #17706e;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #17706e;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.day-panel button.selected {
+  background: #17706e;
+  color: #ffffff;
+}
+
+.time-panel {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.time-panel.open {
+  display: grid;
+}
+
+.time-panel button {
+  height: 36px;
+  border: 1px solid #17706e;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #17706e;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.time-panel button.selected {
+  background: #17706e;
+  color: #ffffff;
 }

@@ -52,29 +52,71 @@
           <span class="suffix">kg</span>
         </div>
 
-        <!-- 운동 지역 선택 -->
-        <input
-          type="text"
-          id="regionInput"
-          class="login-input"
-          placeholder="운동 지역 선택"
-        />
+        <!-- 운동 지역 선택 (드롭다운 트리거) -->
+        <div class="select-field">
+          <button
+            type="button"
+            class="select-trigger"
+            data-target="region-panel"
+          >
+            운동 지역 선택
+          </button>
+          <div class="select-panel region-panel" id="region-panel">
+            <button type="button" data-value="서울">서울</button>
+            <button type="button" data-value="경기">경기</button>
+            <button type="button" data-value="인천">인천</button>
+            <button type="button" data-value="부산">부산</button>
+            <button type="button" data-value="대구">대구</button>
+            <button type="button" data-value="대전">대전</button>
+            <button type="button" data-value="광주">광주</button>
+            <button type="button" data-value="울산">울산</button>
+            <button type="button" data-value="세종">세종</button>
+          </div>
+        </div>
 
-        <!-- 선호하는 운동 요일 -->
-        <input
-          type="text"
-          id="dayInput"
-          class="login-input"
-          placeholder="선호하는 운동 요일"
-        />
+        <!-- 선호하는 운동 요일 (드롭다운 트리거) -->
+        <div class="select-field">
+          <button type="button" class="select-trigger" data-target="day-panel">
+            선호하는 운동 요일
+          </button>
+          <div class="select-panel day-panel" id="day-panel">
+            <button type="button" data-value="월">월</button>
+            <button type="button" data-value="화">화</button>
+            <button type="button" data-value="수">수</button>
+            <button type="button" data-value="목">목</button>
+            <button type="button" data-value="금">금</button>
+            <button type="button" data-value="토">토</button>
+            <button type="button" data-value="일">일</button>
+          </div>
+        </div>
 
-        <!-- 선호하는 운동 시간대 -->
-        <input
-          type="text"
-          id="timeInput"
-          class="login-input"
-          placeholder="선호하는 운동 시간대"
-        />
+        <!-- 선호하는 운동 시간대 (드롭다운 트리거) -->
+        <div class="select-field">
+          <button type="button" class="select-trigger" data-target="time-panel">
+            선호하는 운동 시간대
+          </button>
+          <div class="select-panel time-panel" id="time-panel">
+            <button type="button" data-value="06시">06시</button>
+            <button type="button" data-value="07시">07시</button>
+            <button type="button" data-value="08시">08시</button>
+            <button type="button" data-value="09시">09시</button>
+            <button type="button" data-value="10시">10시</button>
+            <button type="button" data-value="11시">11시</button>
+            <button type="button" data-value="12시">12시</button>
+            <button type="button" data-value="13시">13시</button>
+            <button type="button" data-value="14시">14시</button>
+            <button type="button" data-value="15시">15시</button>
+            <button type="button" data-value="16시">16시</button>
+            <button type="button" data-value="17시">17시</button>
+            <button type="button" data-value="18시">18시</button>
+            <button type="button" data-value="19시">19시</button>
+            <button type="button" data-value="20시">20시</button>
+            <button type="button" data-value="21시">21시</button>
+            <button type="button" data-value="22시">22시</button>
+            <button type="button" data-value="23시">23시</button>
+            <button type="button" data-value="24시">24시</button>
+          </div>
+        </div>
 
         <!-- 회원가입하기 버튼 -->
         <a href="#" id="signupButton" class="signup-btn">
@@ -88,6 +130,7 @@
     </main>
 
     <!-- 자바스크립트 파일 연결 -->
-    <script src="../js/signup3.js"></script>
+    <script src="../js/profile-select.js" defer></script>
+    <script src="../js/signup3.js" defer></script>
   </body>
 </html>
