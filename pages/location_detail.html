@@ -7,13 +7,15 @@
     <link rel="stylesheet" href="../css/location_detail.css" />
     <link rel="stylesheet" href="../css/sidebar.css" />
     <script src="../js/app.js" defer></script>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="../css/workout.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
     <script src="../js/workout-config.js" defer></script>
     <script src="../js/workout-service.js" defer></script>
     <script src="../js/workout-ui.js" defer></script>
-    <script src="../js/location-map.js" defer></script>
+    <script
+      src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=5dd186629d1ef37a8c1e69161acc639c&autoload=false&libraries=clusterer"
+      defer
+    ></script>
+    <script src="../js/workout-map.js" defer></script>
     <script src="../js/location-workout.js" defer></script>
   </head>
 
@@ -41,6 +43,7 @@
           </div>
           <div class="info-section sport-section">
             <small id="location-name">장소를 선택하세요</small>
+            <p id="location-meta" class="location-meta"></p>
             <div class="sport-picker">
               <button type="button" id="sport-trigger" class="sport-name" aria-haspopup="listbox" aria-expanded="false" aria-controls="sport-options" disabled>운동 선택 ▾</button>
               <div id="sport-options" class="sport-options" role="listbox" aria-label="가능한 운동" hidden></div>

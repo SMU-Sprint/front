@@ -70,6 +70,15 @@ html {
   color: #9d2424;
 }
 
+.user-location-marker {
+  width: 20px;
+  height: 20px;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  background-color: #1478ff;
+  box-shadow: 0 2px 8px rgba(20, 80, 160, 0.45);
+}
+
 .place-info {
   min-width: 180px;
   max-width: 260px;
@@ -95,4 +104,11 @@ html {
   color: #526156;
   font-size: 13px;
   line-height: 1.4;
+}
+
+.place-info a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #16704a;
+  font-size: 13px;
 }

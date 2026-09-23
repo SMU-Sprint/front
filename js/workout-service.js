@@ -78,11 +78,12 @@
     return {
       demo,
       async locations() { return demo ? demoLocations.map(({ sports, ...location }) => location) : (await request('/locations')).locations; },
-      async sports(locationId) {
+      async sports(locationId, locationOverride) {
         if (!demo) return (await request(`/locations/${encodeURIComponent(locationId)}/sports`)).sports;
         const location = demoLocations.find(item => item.id === locationId);
-        if (!location) throw new Error('운동 장소를 다시 선택해 주세요.');
-        return location.sports;
+        if (location) return location.sports;
+        if (locationOverride?.id === locationId) return sports;
+        throw new Error('운동 장소를 다시 선택해 주세요.');
       },
       async overview(from, to) {
         if (!demo) {
@@ -104,7 +105,7 @@
         const records = read().sessions.flatMap(splitSession).filter(r => r.date === date);
         return { date, records, totalSeconds: records.reduce((sum, r) => sum + r.durationSeconds, 0) };
       },
-      async start(locationId, sportId) {
+      async start(locationId, sportId, locationOverride) {
         if (!demo) {
           // Keep the same key and payload after a timeout, even after navigation/reload.
           const pendingKey = 'sprint.workouts.api.pendingStart';
@@ -120,8 +121,11 @@
         return mutate(() => {
           const state = read();
           if (state.activeSession) throw new Error('진행 중인 운동이 있습니다. 메인에서 먼저 종료해 주세요.');
-          const location = demoLocations.find(item => item.id === locationId);
-          const sport = location?.sports.find(item => item.id === sportId);
+          const location = demoLocations.find(item => item.id === locationId)
+            || (locationOverride?.id === locationId ? locationOverride : null);
+          const sport = location
+            ? (location.sports || sports).find(item => item.id === sportId)
+            : null;
           if (!sport) throw new Error('이 장소에서 가능한 운동을 선택해 주세요.');
           const session = { id: uuid(), locationId, locationName: location.name, sportId, sportName: sport.name, startedAt: new Date(now()).toISOString() };
           state.activeSession = session; save(state); return session;

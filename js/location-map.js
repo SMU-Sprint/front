@@ -1,6 +1,6 @@
-const DEFAULT_CENTER = { lat: 36.35, lng: 127.8 };
-const DEFAULT_LEVEL = 13;
-const MARKER_BATCH_SIZE = 800;
+const FACILITIES_DATA_URL = "../data/facilities.json";
+const INITIAL_RADIUS_METERS = 1000;
+const MAX_VISIBLE_MARKERS = 1500;
 
 function setMapStatus(message, isError = false) {
   const status = document.getElementById("mapStatus");
@@ -8,47 +8,6 @@ function setMapStatus(message, isError = false) {
 
   status.textContent = message;
   status.classList.toggle("is-error", isError);
-}
-
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function createInfoContent(place) {
-  const name = escapeHtml(place.name || "체육시설");
-  const placeType = escapeHtml(place.type);
-  const placeAddress = escapeHtml(place.address);
-  const type = placeType ? `<span>${placeType}</span>` : "";
-  const address = placeAddress ? `<p>${placeAddress}</p>` : "";
-
-  return `
-    <div class="place-info">
-      <strong>${name}</strong>
-      ${type}
-      ${address}
-    </div>
-  `;
-}
-
-function getValidPlaces() {
-  return (window.SPORT_FACILITIES || []).filter((place) => {
-    const lat = Number(place.lat);
-    const lng = Number(place.lng);
-
-    return (
-      Number.isFinite(lat) &&
-      Number.isFinite(lng) &&
-      lat >= -90 &&
-      lat <= 90 &&
-      lng >= -180 &&
-      lng <= 180
-    );
-  });
 }
 
 function waitForKakaoMaps() {
@@ -69,106 +28,187 @@ function waitForKakaoMaps() {
   });
 }
 
-function scheduleNextBatch(callback) {
-  if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(callback, { timeout: 120 });
-    return;
-  }
-
-  window.setTimeout(callback, 0);
-}
-
-function renderKakaoMarkersInBatches({ map, clusterer, infoWindow, places }) {
-  const { kakao } = window;
-  const bounds = new kakao.maps.LatLngBounds();
-  let index = 0;
-
-  function renderBatch() {
-    const batchEnd = Math.min(index + MARKER_BATCH_SIZE, places.length);
-    const markers = [];
-
-    for (; index < batchEnd; index += 1) {
-      const place = places[index];
-      const position = new kakao.maps.LatLng(
-        Number(place.lat),
-        Number(place.lng),
-      );
-      const marker = new kakao.maps.Marker({ position });
-
-      bounds.extend(position);
-      kakao.maps.event.addListener(marker, "click", () => {
-        infoWindow.setContent(createInfoContent(place));
-        infoWindow.open(map, marker);
-      });
-      markers.push(marker);
-    }
-
-    clusterer.addMarkers(markers);
-    setMapStatus(
-      `${index.toLocaleString("ko-KR")} / ${places.length.toLocaleString("ko-KR")}개 장소를 표시하는 중입니다.`,
-    );
-
-    if (index < places.length) {
-      scheduleNextBatch(renderBatch);
+function getCurrentPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("이 브라우저에서는 위치 정보를 사용할 수 없습니다."));
       return;
     }
 
-    map.setBounds(bounds);
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: true,
+      timeout: 12000,
+      maximumAge: 60000,
+    });
+  });
+}
+
+async function loadFacilities() {
+  const response = await fetch(FACILITIES_DATA_URL);
+  if (!response.ok) {
+    throw new Error(`시설 데이터를 불러오지 못했습니다: ${response.status}`);
+  }
+
+  const facilities = await response.json();
+  if (!Array.isArray(facilities)) {
+    throw new Error("시설 데이터 형식이 올바르지 않습니다.");
+  }
+
+  return facilities;
+}
+
+function getFacilitiesInBounds(facilities, bounds, center) {
+  const southWest = bounds.getSouthWest();
+  const northEast = bounds.getNorthEast();
+  const south = southWest.getLat();
+  const west = southWest.getLng();
+  const north = northEast.getLat();
+  const east = northEast.getLng();
+  const centerLat = center.getLat();
+  const centerLng = center.getLng();
+  const visible = facilities.filter(
+    (facility) =>
+      facility.lat >= south &&
+      facility.lat <= north &&
+      facility.lng >= west &&
+      facility.lng <= east,
+  );
+
+  if (visible.length <= MAX_VISIBLE_MARKERS) {
+    return { total: visible.length, facilities: visible };
+  }
+
+  const nearestFacilities = visible
+    .map((facility) => ({
+      facility,
+      centerDistance:
+        (facility.lat - centerLat) ** 2 + (facility.lng - centerLng) ** 2,
+    }))
+    .sort((a, b) => a.centerDistance - b.centerDistance)
+    .slice(0, MAX_VISIBLE_MARKERS)
+    .map(({ facility }) => facility);
+
+  return { total: visible.length, facilities: nearestFacilities };
+}
+
+function createFacilityMarker(map, facility) {
+  const { kakao } = window;
+  const marker = new kakao.maps.Marker({
+    position: new kakao.maps.LatLng(facility.lat, facility.lng),
+    title: facility.name,
+  });
+
+  kakao.maps.event.addListener(marker, "click", () => {
+    const locationId = encodeURIComponent(facility.id);
+    window.location.assign(`location_detail.html?locationId=${locationId}`);
+  });
+
+  return marker;
+}
+
+function connectVisibleMarkers(map, clusterer, facilities) {
+  const { kakao } = window;
+
+  function updateMarkers() {
+    const visible = getFacilitiesInBounds(
+      facilities,
+      map.getBounds(),
+      map.getCenter(),
+    );
+    const markers = visible.facilities.map((facility) =>
+      createFacilityMarker(map, facility),
+    );
+
+    clusterer.clear();
+    clusterer.addMarkers(markers);
+
+    if (visible.total > MAX_VISIBLE_MARKERS) {
+      setMapStatus(
+        `현재 화면의 ${visible.total.toLocaleString("ko-KR")}개 시설 중 중심과 가까운 ${MAX_VISIBLE_MARKERS.toLocaleString("ko-KR")}개를 표시합니다. 지도를 확대하면 더 정확히 볼 수 있습니다.`,
+      );
+      return;
+    }
+
     setMapStatus(
-      `${places.length.toLocaleString("ko-KR")}개 장소가 등록되었습니다.`,
+      visible.facilities.length
+        ? `현재 화면에 ${visible.facilities.length.toLocaleString("ko-KR")}개 체육시설이 있습니다.`
+        : "현재 화면에 등록된 체육시설이 없습니다. 지도를 이동해 보세요.",
     );
   }
 
-  renderBatch();
+  kakao.maps.event.addListener(map, "idle", updateMarkers);
+  updateMarkers();
+}
+
+function renderCurrentLocation(map, center) {
+  const { kakao } = window;
+  const circle = new kakao.maps.Circle({
+    map,
+    center,
+    radius: INITIAL_RADIUS_METERS,
+    strokeWeight: 2,
+    strokeColor: "#1478ff",
+    strokeOpacity: 0.75,
+    strokeStyle: "dashed",
+    fillColor: "#7ab5ff",
+    fillOpacity: 0.1,
+  });
+
+  new kakao.maps.CustomOverlay({
+    map,
+    position: center,
+    content: '<div class="user-location-marker" title="현재 위치"></div>',
+    xAnchor: 0.5,
+    yAnchor: 0.5,
+    zIndex: 5,
+  });
+
+  map.setBounds(circle.getBounds(), 40, 40, 40, 40);
 }
 
 async function initKakaoMap() {
   const container = document.getElementById("kakaoMap");
-
   if (!container) return;
 
-  const places = getValidPlaces();
-
-  if (!places.length) {
-    setMapStatus("좌표가 있는 장소가 없습니다.", true);
-    return;
-  }
-
   try {
-    await waitForKakaoMaps();
+    setMapStatus("현재 위치와 체육시설 데이터를 불러오는 중입니다.");
+    const [position, facilities] = await Promise.all([
+      getCurrentPosition(),
+      loadFacilities(),
+      waitForKakaoMaps(),
+    ]);
+    const { kakao } = window;
+    const center = new kakao.maps.LatLng(
+      position.coords.latitude,
+      position.coords.longitude,
+    );
+    const map = new kakao.maps.Map(container, {
+      center,
+      level: 5,
+    });
+    const clusterer = new kakao.maps.MarkerClusterer({
+      map,
+      averageCenter: true,
+      minLevel: 5,
+    });
+
+    map.addControl(
+      new kakao.maps.ZoomControl(),
+      kakao.maps.ControlPosition.RIGHT,
+    );
+    map.relayout();
+    renderCurrentLocation(map, center);
+    connectVisibleMarkers(map, clusterer, facilities);
   } catch (error) {
-    console.error("Kakao Maps SDK unavailable.", error);
+    console.error("Kakao map initialization failed.", error);
+    const isPermissionError = error?.code === 1;
     setMapStatus(
-      "카카오맵을 불러오지 못했습니다. Kakao Developers에서 현재 도메인을 등록해 주세요.",
+      isPermissionError
+        ? "현재 위치를 표시하려면 브라우저의 위치 권한을 허용해 주세요."
+        : "지도를 불러오지 못했습니다. 위치 권한과 데이터 연결을 확인해 주세요.",
       true,
     );
-    return;
   }
-
-  const { kakao } = window;
-  const map = new kakao.maps.Map(container, {
-    center: new kakao.maps.LatLng(DEFAULT_CENTER.lat, DEFAULT_CENTER.lng),
-    level: DEFAULT_LEVEL,
-  });
-
-  const clusterer = new kakao.maps.MarkerClusterer({
-    map,
-    averageCenter: true,
-    minLevel: 8,
-  });
-
-  const infoWindow = new kakao.maps.InfoWindow({ removable: true });
-
-  map.relayout();
-  setMapStatus(
-    `${places.length.toLocaleString("ko-KR")}개 장소를 준비하는 중입니다.`,
-  );
-  renderKakaoMarkersInBatches({
-    map,
-    clusterer,
-    infoWindow,
-    places,
-  });
 }
 
 if (document.readyState === "loading") {

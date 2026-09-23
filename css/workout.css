@@ -18,6 +18,7 @@ body[data-workout-page="locations"] .map-and-locations { width: 100%; max-width:
 body[data-workout-page="locations"] .map-container { height: 70vh; }
 .sport-section { position: relative; padding: 12px; gap: 10px; }
 #location-name { font-size: 15px; color: #64716a; }
+.location-meta { max-width: 240px; min-height: 34px; font-size: 12px; line-height: 1.45; color: #7a877f; overflow-wrap: anywhere; }
 .sport-picker { width: 100%; position: relative; }
 .sport-picker .sport-name { width: 100%; border: 0; background: transparent; font-size: 32px; padding: 8px 0; cursor: pointer; }
 .sport-options { position: absolute; top: 100%; left: 0; right: 0; max-height: 190px; overflow-y: auto; background: white; border: 1px solid var(--main4); border-radius: 12px; padding: 5px; z-index: 5; box-shadow: 0 8px 20px #0002; }

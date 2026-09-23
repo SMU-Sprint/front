@@ -35,6 +35,15 @@ test('invalid location/sport cannot start; a failed save does not claim success'
   await assert.rejects(api.stop(started.id), /quota/);
   assert.equal((await api.overview('2020-01-01','2030-01-01')).activeSession.id, started.id);
 });
+test('an imported facility uses the default sports in demo mode', async () => {
+  const api = createService({ config: { mode: 'demo' }, storage: memory(), uuid: () => 'imported-session' });
+  const facility = { id: 'csv-place', name: '테스트 체육관', latitude: 37.5, longitude: 127 };
+  const available = await api.sports(facility.id, facility);
+  assert.ok(available.some(item => item.id === 'running'));
+  const session = await api.start(facility.id, 'running', facility);
+  assert.equal(session.locationName, facility.name);
+  assert.equal(session.sportName, '달리기');
+});
 test('midnight/year crossover splits seconds by local calendar date without loss', () => {
   const records = splitSession({ startedAt: new Date(2026,11,31,23,50).toISOString(), endedAt: new Date(2027,0,1,0,20).toISOString() });
   assert.deepEqual(records.map(r => [r.date,r.durationSeconds]), [['2026-12-31',600],['2027-01-01',1200]]);
