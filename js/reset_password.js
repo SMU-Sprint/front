@@ -55,7 +55,7 @@ nextButton.addEventListener("click", async function (e) {
   const val1 = newPassword.value;
   const val2 = confirmPassword.value;
 
-  // 💡 조건에 맞지 않을 때 팝업 알림 띄우기
+  // 비밀번호 유효성 검사
   if (!passwordRegex.test(val1)) {
     alert(
       "비밀번호는 영문, 숫자, 특수문자를 모두 포함한 8자 이상이어야 합니다.",
@@ -69,8 +69,10 @@ nextButton.addEventListener("click", async function (e) {
     return;
   }
 
-  // 세션에서 인증 코드 가져오기
-  const verificationCode = sessionStorage.getItem("verify_code");
+  // 💡 앞서 저장한 세션 키 이름("password_change_code")과 일치시키기
+  const verificationCode =
+    sessionStorage.getItem("password_change_code") ||
+    sessionStorage.getItem("verify_code");
   const accessToken = localStorage.getItem("accessToken");
 
   if (!accessToken) {
@@ -81,14 +83,14 @@ nextButton.addEventListener("click", async function (e) {
 
   if (!verificationCode) {
     alert("인증 정보가 없습니다. 이메일 인증부터 다시 진행해주세요.");
-    window.location.href = "find_password.html";
+    window.location.href = "reset_password1.html"; // 첫 번째 인증 페이지로 이동
     return;
   }
 
   try {
     nextButton.style.pointerEvents = "none";
 
-    // 백엔드 PATCH /api/v1/members/password 호출
+    // 백엔드 명세 PATCH /api/v1/members/password 호출
     const response = await fetch(
       "https://sprintkr.site/api/v1/members/password",
       {
@@ -110,14 +112,14 @@ nextButton.addEventListener("click", async function (e) {
     if (response.ok && data.isSuccess) {
       alert("비밀번호가 성공적으로 변경되었습니다!");
       sessionStorage.clear(); // 사용 완료된 세션 정리
-      window.location.href = "login.html"; // 로그인 페이지로 이동
+      window.location.href = "login.html"; // 변경 후 로그인 페이지로 이동
     } else {
       alert(data.message || "비밀번호 변경에 실패했습니다.");
+      nextButton.style.pointerEvents = "auto";
     }
   } catch (error) {
     console.error("통신 에러:", error);
     alert("서버와 통신 중 오류가 발생했습니다.");
-  } finally {
     nextButton.style.pointerEvents = "auto";
   }
 });

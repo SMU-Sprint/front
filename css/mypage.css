@@ -219,3 +219,10 @@
     width: 92vw;
   }
 }
+/* 비밀번호 변경하기 배너 스타일 추가 */
+.password-change {
+  color: var(--main4);
+  background: rgb(132, 169, 132);
+  border: 2px solid var(--main4);
+  transition: all 0.2s ease-in-out;
+}
