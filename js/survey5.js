@@ -1,107 +1,153 @@
-document.addEventListener("DOMContentLoaded", async function () {
+const API_BASE_URL = "https://sprintkr.site/api/v1";
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function normalizeRecommendations(data) {
+  const result = data?.result ?? data?.data ?? data;
+  const candidates = Array.isArray(result)
+    ? result
+    : result?.recommendations ||
+      result?.recommendationList ||
+      result?.exercises ||
+      result?.items ||
+      [];
+
+  return (Array.isArray(candidates) ? candidates : [candidates])
+    .filter(Boolean)
+    .map((item, index) => ({
+      rank: item.rank ?? index + 1,
+      exerciseName:
+        item.exerciseName ||
+        item.name ||
+        item.sportName ||
+        item.exercise ||
+        "추천 운동",
+      reason: item.reason || item.recommendReason || item.description || "",
+      improvements:
+        item.improvements ||
+        item.expectedEffect ||
+        item.effect ||
+        item.benefit ||
+        "",
+    }));
+}
+
+function renderLoading(recommendationBox) {
+  recommendationBox.innerHTML = `
+    <div class="question-group">
+      <p class="question-title">AI 운동 추천을 불러오는 중입니다...</p>
+      <p class="recommend-desc">잠시만 기다려 주세요.</p>
+    </div>
+  `;
+}
+
+function renderError(recommendationBox, message) {
+  recommendationBox.innerHTML = `
+    <div class="question-group">
+      <p class="question-title">운동 추천을 불러오지 못했습니다.</p>
+      <p class="recommend-desc">${escapeHtml(message)}</p>
+    </div>
+  `;
+}
+
+function renderRecommendations(recommendationBox, recommendations) {
+  if (!recommendations.length) {
+    renderError(recommendationBox, "추천 운동 결과가 비어 있습니다.");
+    return;
+  }
+
+  recommendationBox.innerHTML = recommendations
+    .map(
+      (item, index) => `
+        <div class="question-group">
+          <p class="question-title">${escapeHtml(item.rank)}. ${escapeHtml(
+            item.exerciseName,
+          )}</p>
+          ${
+            item.reason
+              ? `<p class="recommend-desc"><strong>추천 이유:</strong> ${escapeHtml(
+                  item.reason,
+                )}</p>`
+              : ""
+          }
+          ${
+            item.improvements
+              ? `<p class="recommend-desc recommend-effect"><strong>기대 효과:</strong> ${escapeHtml(
+                  item.improvements,
+                )}</p>`
+              : ""
+          }
+        </div>
+        ${index < recommendations.length - 1 ? '<div class="divider"></div>' : ""}
+      `,
+    )
+    .join("");
+}
+
+async function loadRecommendation() {
   const accessToken = localStorage.getItem("accessToken");
+  const recommendationBox = document.getElementById("recommendationBox");
+  if (!recommendationBox) return;
+
   if (!accessToken) {
     alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
     window.location.href = "login.html";
     return;
   }
 
-  const recommendationBox = document.getElementById("recommendationBox");
+  renderLoading(recommendationBox);
 
   try {
-    // 스웨거 예시 명세에 딱 맞춘 가장 안전한 기본 DTO 객체
-    const surveyData = {
-      exercisePurpose: "다이어트", // 스웨거 예시 값
-      exercisePurposeEtc: "string",
-      exerciseExperienceFlag: true,
-      exerciseExperienceDetail: "string",
-      preferredSport: "string",
-      occupationType: "활동", // 스웨거 예시 값
-      vigorousDays: 0,
-      vigorousDurationMinutes: 0,
-      moderateDays: 0,
-      moderateDurationMinutes: 0,
-      walkingDays: 0,
-      walkingDurationMinutes: 0,
-      workStartTime: "string",
-      workEndTime: "string",
-      exerciseSpot: "종목_특화_운동장", // 스웨거 예시 값 (헬스장 X, 스웨거에 적힌 원본 값)
-      exerciseSpotEtc: "string",
-      fatigueFlag: true,
-      stairClimbFlag: true,
-      walk300mFlag: true,
-      weightLossFlag: true,
-      constraintTypes: ["시간부족"], // 스웨거 예시 값
-      constraintEtc: "string",
-    };
-
-    console.log("== [서버로 전송하는 스웨거 표준 데이터] ===", surveyData);
-
-    // 3. 설문 저장 API 호출
-    const surveyResponse = await fetch(
-      "https://sprintkr.site/api/v1/members/survey",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(surveyData),
+    const response = await fetch(`${API_BASE_URL}/members/recommendation`, {
+      method: "POST",
+      headers: {
+        accept: "*/*",
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
 
-    const surveyResult = await surveyResponse.json();
-    console.log("== [설문 저장 응답 결과] ===", surveyResult);
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+    console.log("== [추천 운동 응답 결과] ==", data);
 
-    if (!surveyResponse.ok || !surveyResult.isSuccess) {
-      alert(surveyResult.message || "설문 저장에 실패했습니다.");
+    if (!response.ok || data.isSuccess === false) {
+      const error = new Error(
+        data.message || "운동 추천을 불러오는 데 실패했습니다.",
+      );
+      error.status = response.status;
+      throw error;
+    }
+
+    renderRecommendations(recommendationBox, normalizeRecommendations(data));
+    sessionStorage.removeItem("survey_submitted");
+  } catch (error) {
+    console.error("추천 운동 통신 에러:", error);
+    if (error.status === 401) {
+      localStorage.removeItem("accessToken");
+      alert("로그인이 만료되었습니다. 다시 로그인해 주세요.");
+      window.location.href = "login.html";
       return;
     }
-
-    // 4. AI 운동 추천 생성 API 호출
-    const recoResponse = await fetch(
-      "https://sprintkr.site/api/v1/members/recommendation",
-      {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
+    renderError(
+      recommendationBox,
+      error.message || "서버와 통신 중 오류가 발생했습니다.",
     );
-
-    const recoData = await recoResponse.json();
-    console.log("== [추천 운동 응답 결과] ===", recoData);
-
-    if (recoResponse.ok && recoData.isSuccess) {
-      const recommendations = recoData.result.recommendations;
-
-      let htmlContent = "";
-      recommendations.forEach((item, index) => {
-        htmlContent += `
-          <div class="question-group">
-            <p class="question-title">${item.rank}. ${item.exerciseName}</p>
-            <p class="recommend-desc"><strong>추천 이유:</strong> ${item.reason}</p>
-            <p class="recommend-desc" style="margin-top: 8px; color: #555;"><strong>기대 효과:</strong> ${item.improvements}</p>
-          </div>
-        `;
-        if (index < recommendations.length - 1) {
-          htmlContent += `<div class="divider"></div>`;
-        }
-      });
-
-      recommendationBox.innerHTML = htmlContent;
-      sessionStorage.clear(); // 완료 후 세션 정리
-    } else {
-      alert(recoData.message || "운동 추천을 불러오는 데 실패했습니다.");
-    }
-  } catch (error) {
-    console.error("통신 에러:", error);
-    alert("서버와 통신 중 오류가 발생했습니다.");
   }
-});
+}
 
-// 하단 '완료' 버튼 클릭 시 메인 화면으로 이동
+document.addEventListener("DOMContentLoaded", loadRecommendation);
+
 const completeBtn = document.getElementById("completeBtn");
 if (completeBtn) {
   completeBtn.addEventListener("click", function () {

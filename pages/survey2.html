@@ -31,11 +31,6 @@
               <span class="custom-box radio-box"></span> 비활동적(예: 행정직,
               사무직 등)
             </label>
-            <label class="checkbox-label">
-              <input type="radio" name="job" value="기타" />
-              <span class="custom-box radio-box"></span> 기타(예: 주부, 학생,
-              무직 등)
-            </label>
           </div>
         </div>
 
@@ -43,11 +38,35 @@
 
         <div class="question-group">
           <p class="question-title">주로 운동하는 장소가 어디입니까?</p>
+          <div class="options-row">
+            <label class="checkbox-label">
+              <input type="radio" name="spot" value="종목_특화_운동장" />
+              <span class="custom-box radio-box"></span> 종목 특화 운동장
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="spot" value="산책로" />
+              <span class="custom-box radio-box"></span> 산책로
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="spot" value="공터" />
+              <span class="custom-box radio-box"></span> 공터
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="spot" value="학교_체육시설" />
+              <span class="custom-box radio-box"></span> 학교 체육시설
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="spot" value="기타" />
+              <span class="custom-box radio-box"></span> 기타
+            </label>
+          </div>
           <input
             type="text"
-            id="locationInput"
+            id="exerciseSpotEtcInput"
             class="login-input"
-            placeholder="타이핑"
+            placeholder="기타 운동 장소를 입력해 주세요"
+            maxlength="100"
+            hidden
           />
         </div>
 
@@ -55,85 +74,85 @@
 
         <div class="question-group">
           <p class="question-title">
-            선호하는 스포츠는 무엇입니까? (중복 가능)
+            가장 선호하는 스포츠는 무엇입니까?
           </p>
           <div class="sports-grid">
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="축구" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="축구" /><span
+                class="custom-box radio-box"
               ></span>
               축구</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="농구" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="농구" /><span
+                class="custom-box radio-box"
               ></span>
               농구</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="배드민턴" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="배드민턴" /><span
+                class="custom-box radio-box"
               ></span>
               배드민턴</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="탁구" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="탁구" /><span
+                class="custom-box radio-box"
               ></span>
               탁구</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="족구" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="족구" /><span
+                class="custom-box radio-box"
               ></span>
               족구</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="볼링" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="볼링" /><span
+                class="custom-box radio-box"
               ></span>
               볼링</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="수영" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="수영" /><span
+                class="custom-box radio-box"
               ></span>
               수영</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="테니스" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="테니스" /><span
+                class="custom-box radio-box"
               ></span>
               테니스</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="야구" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="야구" /><span
+                class="custom-box radio-box"
               ></span>
               야구</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="런닝" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="런닝" /><span
+                class="custom-box radio-box"
               ></span>
               런닝</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="스케이트" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="스케이트" /><span
+                class="custom-box radio-box"
               ></span>
               스케이트</label
             >
             <label class="checkbox-label"
               ><input
-                type="checkbox"
+                type="radio"
                 name="sports"
                 value="자전거 라이딩"
-              /><span class="custom-box"></span> 자전거 라이딩</label
+              /><span class="custom-box radio-box"></span> 자전거 라이딩</label
             >
             <label class="checkbox-label"
-              ><input type="checkbox" name="sports" value="기타" /><span
-                class="custom-box"
+              ><input type="radio" name="sports" value="기타" /><span
+                class="custom-box radio-box"
               ></span>
               기타</label
             >

@@ -81,6 +81,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    if (!localStorage.getItem("accessToken")) {
+      alert("설문을 작성하려면 로그인이 필요합니다.");
+      window.location.href = "login.html";
+      return;
+    }
+
     const form = document.getElementById("surveyForm");
     restore();
     lockFutureSteps();

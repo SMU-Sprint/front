@@ -22,22 +22,34 @@
           <p class="question-title">운동 목적이 무엇입니까?</p>
           <div class="options-row">
             <label class="checkbox-label">
-              <input type="checkbox" name="purpose" value="다이어트" />
-              <span class="custom-box"></span> 다이어트
+              <input type="radio" name="purpose" value="다이어트" />
+              <span class="custom-box radio-box"></span> 다이어트
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="purpose" value="질환예방" />
-              <span class="custom-box"></span> 질환예방
+              <input type="radio" name="purpose" value="체형관리" />
+              <span class="custom-box radio-box"></span> 체형관리
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="purpose" value="체력측정" />
-              <span class="custom-box"></span> 체력측정(채용)
+              <input type="radio" name="purpose" value="질병예방" />
+              <span class="custom-box radio-box"></span> 질병예방
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="purpose" value="기타" />
-              <span class="custom-box"></span> 기타
+              <input type="radio" name="purpose" value="체력증진" />
+              <span class="custom-box radio-box"></span> 체력증진
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="purpose" value="기타" />
+              <span class="custom-box radio-box"></span> 기타
             </label>
           </div>
+          <input
+            type="text"
+            id="purposeEtcInput"
+            class="detail-input"
+            placeholder="기타 운동 목적을 입력해 주세요"
+            maxlength="100"
+            hidden
+          />
         </div>
 
         <div class="divider"></div>
@@ -59,37 +71,55 @@
         <div class="divider"></div>
 
         <div class="question-group">
-          <p class="question-title">운동에 제약사항이 있습니까?</p>
+          <p class="question-title">
+            운동을 지속하기 어려운 점은 무엇입니까? (중복 가능)
+          </p>
           <div class="options-grid">
             <label class="checkbox-label">
-              <input type="checkbox" name="limit" value="심장질환" />
-              <span class="custom-box"></span> 심장질환
+              <input type="checkbox" name="limit" value="시간부족" />
+              <span class="custom-box"></span> 시간 부족
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="limit" value="어지럼증" />
-              <span class="custom-box"></span> 어지럼증
+              <input type="checkbox" name="limit" value="과도한업무" />
+              <span class="custom-box"></span> 과도한 업무
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="limit" value="허리통증" />
-              <span class="custom-box"></span> 허리통증
+              <input type="checkbox" name="limit" value="경제적비용" />
+              <span class="custom-box"></span> 경제적 비용
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="limit" value="무릎 및 발목통증" />
-              <span class="custom-box"></span> 무릎 및 발목통증
+              <input type="checkbox" name="limit" value="효과의불확실성" />
+              <span class="custom-box"></span> 효과의 불확실성
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="limit" value="어깨 및 손목통증" />
-              <span class="custom-box"></span> 어깨 및 손목통증
+              <input type="checkbox" name="limit" value="운동방법의어려움" />
+              <span class="custom-box"></span> 운동 방법의 어려움
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" name="limit" value="고혈압" />
-              <span class="custom-box"></span> 고혈압
+              <input type="checkbox" name="limit" value="흥미의부재" />
+              <span class="custom-box"></span> 흥미의 부재
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="부상이나통증" />
+              <span class="custom-box"></span> 부상이나 통증
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="limit" value="환경문제" />
+              <span class="custom-box"></span> 환경 문제
             </label>
             <label class="checkbox-label">
               <input type="checkbox" name="limit" value="기타" />
               <span class="custom-box"></span> 기타
             </label>
           </div>
+          <input
+            type="text"
+            id="constraintEtcInput"
+            class="detail-input"
+            placeholder="기타 어려운 점을 입력해 주세요"
+            maxlength="100"
+            hidden
+          />
         </div>
       </form>
 
