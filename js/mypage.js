@@ -7,6 +7,50 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+  // 회원 정보 요청과 관계없이 사진 선택 기능은 페이지가 열리자마자 활성화한다.
+  const avatarElem = document.querySelector(".avatar");
+  const profileImageInput = document.getElementById("profileImageInput");
+
+  function showProfileImage(imageUrl) {
+    if (!avatarElem || !imageUrl) return;
+    avatarElem.style.backgroundImage = `url("${imageUrl}")`;
+    avatarElem.classList.add("has-image");
+  }
+
+  const savedProfileImg = localStorage.getItem("user_profile_image");
+  showProfileImage(savedProfileImg);
+
+  if (profileImageInput && avatarElem) {
+    profileImageInput.addEventListener("change", function (event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        alert("이미지 파일을 선택해주세요.");
+        event.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.addEventListener("load", function () {
+        const base64Image = reader.result;
+
+        // 저장 용량이 부족하더라도 선택한 사진은 즉시 화면에 보여준다.
+        showProfileImage(base64Image);
+        try {
+          localStorage.setItem("user_profile_image", base64Image);
+          alert("프로필 사진이 성공적으로 변경되었습니다!");
+        } catch (error) {
+          console.error("프로필 사진 저장 실패:", error);
+          alert("사진은 적용되었지만 파일이 커서 브라우저에 저장하지 못했습니다.");
+        }
+      });
+      reader.addEventListener("error", function () {
+        alert("선택한 사진을 불러오지 못했습니다. 다시 선택해주세요.");
+      });
+      reader.readAsDataURL(file);
+    });
+  }
+
   // ==========================================
   // 1. 회원 기본 정보 조회 및 렌더링 (GET /api/v1/members/me)
   // ==========================================
@@ -49,36 +93,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   // ==========================================
-  // 2. 프로필 이미지 업로드 및 로컬스토리지 영구 저장/불러오기
-  // ==========================================
-  const avatarElem = document.querySelector(".avatar");
-  const profileImageInput = document.getElementById("profileImageInput");
-
-  // 저장된 프로필 이미지가 있다면 불러와서 적용
-  const savedProfileImg = localStorage.getItem("user_profile_image");
-  if (savedProfileImg && avatarElem) {
-    avatarElem.style.backgroundImage = `url(${savedProfileImg})`;
-  }
-
-  // 파일 업로드 시 Base64로 변환 후 로컬스토리지 저장
-  if (profileImageInput && avatarElem) {
-    profileImageInput.addEventListener("change", function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (uploadEvent) {
-        const base64Image = uploadEvent.target.result;
-        localStorage.setItem("user_profile_image", base64Image);
-        avatarElem.style.backgroundImage = `url(${base64Image})`;
-        alert("프로필 사진이 성공적으로 변경되었습니다!");
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // ==========================================
-  // 3. 선호 운동 정보(지역, 요일, 시간대) 불러오기
+  // 2. 선호 운동 정보(지역, 요일, 시간대) 불러오기
   // ==========================================
   const savedRegion = localStorage.getItem("user_region");
   const savedDay = localStorage.getItem("user_day");
@@ -93,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (timeElem && savedTime) timeElem.textContent = savedTime;
 
   // ==========================================
-  // 4. 로그아웃 기능 (인증 토큰만 삭제, 프로필 사진 및 설정은 유지)
+  // 3. 로그아웃 기능 (인증 토큰만 삭제, 프로필 사진 및 설정은 유지)
   // ==========================================
   const logoutModal = document.getElementById("logout-modal");
   if (logoutModal) {
@@ -125,7 +140,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   // ==========================================
-  // 5. 회원 탈퇴 기능 (탈퇴 시 모든 로컬 데이터 완전히 초기화)
+  // 4. 회원 탈퇴 기능 (탈퇴 시 모든 로컬 데이터 완전히 초기화)
   // ==========================================
   const withdrawModal = document.getElementById("withdraw-modal");
   if (withdrawModal) {

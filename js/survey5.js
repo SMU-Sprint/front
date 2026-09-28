@@ -24,6 +24,8 @@ function normalizeRecommendations(data) {
     .map((item, index) => ({
       rank: item.rank ?? index + 1,
       exerciseName:
+        item.exercise_name ||
+        item.exercis_name ||
         item.exerciseName ||
         item.name ||
         item.sportName ||

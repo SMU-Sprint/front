@@ -38,7 +38,7 @@ function readSelectedFacility(locationId) {
     const openingHours = location.openTime || location.closeTime
       ? `${location.openTime || '미정'}~${location.closeTime || '미정'}`
       : '';
-    locationMeta.textContent = [location.type, location.address, openingHours].filter(Boolean).join(' · ');
+    locationMeta.textContent = [location.exerciseName || location.type, location.address, openingHours].filter(Boolean).join(' · ');
     sessionStorage.setItem(SprintWorkout.SELECTED_FACILITY_KEY, JSON.stringify(location));
     const url = new URL(window.location.href); url.searchParams.set('locationId', location.id); history.replaceState(null, '', url);
     document.querySelectorAll('.location-choice').forEach(button => button.setAttribute('aria-pressed', String(button.textContent === location.name)));

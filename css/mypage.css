@@ -46,6 +46,9 @@
   background-size: cover;
   background-position: center;
 }
+.avatar.has-image {
+  background-color: var(--white);
+}
 
 /* 호버 시 '사진 변경' 안내 문구 표시 */
 .avatar .avatar-placeholder-text {

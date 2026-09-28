@@ -21,6 +21,16 @@
     if (seconds < 7200) return 'main3';
     return 'main4';
   }
+  function exerciseNameOf(value) {
+    return value?.exercise_name || value?.exercis_name || value?.exerciseName || value?.type || '';
+  }
+  function exerciseNamesOf(value) {
+    const exerciseNames = exerciseNameOf(value);
+    const names = Array.isArray(exerciseNames)
+      ? exerciseNames
+      : String(exerciseNames).split(/[,，]/);
+    return [...new Set(names.map(name => String(name).trim()).filter(Boolean))];
+  }
   // Used only by the local demo adapter. The API must return server-side totals.
   function splitSession(session) {
     const start = Date.parse(session.startedAt), end = Date.parse(session.endedAt);
@@ -106,7 +116,8 @@
         return result.facilities.map(facility => ({
           id: String(facility.facilityId),
           name: facility.name,
-          type: facility.type,
+          exerciseName: exerciseNameOf(facility),
+          type: exerciseNameOf(facility),
           address: facility.address,
           latitude: facility.latitude,
           longitude: facility.longitude,
@@ -117,9 +128,8 @@
       },
       async sports(locationId, locationOverride) {
         if (!demo) {
-          const facilitySport = locationOverride?.type
-            ? [{ id: locationOverride.type, name: locationOverride.type }]
-            : [];
+          const facilitySport = exerciseNamesOf(locationOverride)
+            .map(name => ({ id: name, name }));
           return facilitySport.length ? facilitySport : sports;
         }
         const location = demoLocations.find(item => item.id === locationId);
@@ -163,14 +173,15 @@
             records: result.records.map((record, index) => {
               const matched = metadata.find(item =>
                 !item.used &&
-                item.exerciseName === record.exerciseName &&
+                item.exerciseName === exerciseNameOf(record) &&
                 item.durationMinutes === record.durationMinutes
               );
               if (matched) matched.used = true;
+              const recordExerciseName = exerciseNameOf(record);
               return {
                 id: matched?.recordId || `${result.date}-${index}`,
                 locationName: matched?.locationName || '',
-                sportName: record.exerciseName,
+                sportName: recordExerciseName,
                 startedAt: matched?.startedAt,
                 endedAt: matched?.endedAt,
                 durationSeconds: record.durationMinutes * 60,
@@ -236,7 +247,7 @@
           metadata.push({
             recordId: created.recordId,
             exerciseDate: created.exerciseDate,
-            exerciseName: created.exerciseName,
+            exerciseName: exerciseNameOf(created),
             durationMinutes: created.durationMinutes,
             locationName: active.locationName,
             startedAt: active.startedAt,

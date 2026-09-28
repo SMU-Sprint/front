@@ -120,7 +120,7 @@ test("recommendation response from Swagger is normalized for survey5", () => {
   };
   vm.createContext(context);
   vm.runInContext(
-    `${source}\nthis.normalized = normalizeRecommendations({ result: { recommendations: [{ rank: 1, exerciseName: "수영", reason: "관절 부담이 적음", improvements: "심폐지구력 향상" }] } }); this.box = { innerHTML: "" }; renderRecommendations(this.box, this.normalized);`,
+    `${source}\nthis.normalized = normalizeRecommendations({ result: { recommendations: [{ rank: 1, exercise_name: "수영", reason: "관절 부담이 적음", improvements: "심폐지구력 향상" }] } }); this.box = { innerHTML: "" }; renderRecommendations(this.box, this.normalized);`,
     context,
   );
 
