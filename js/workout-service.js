@@ -21,6 +21,55 @@
     if (seconds < 7200) return 'main3';
     return 'main4';
   }
+  const LEVELS = ['dark', 'main1', 'main2', 'main3', 'main4'];
+  const COLOR_LEVELS = {
+    dark: 'dark',
+    main1: 'main1',
+    main2: 'main2',
+    main3: 'main3',
+    main4: 'main4',
+    '#d9d9d9': 'dark',
+    '#f4fce9': 'main1',
+    '#eaf6ad': 'main2',
+    '#b6eb7a': 'main3',
+    '#17706e': 'main4',
+  };
+  function numberOf(...values) {
+    for (const value of values) {
+      if (value === null || value === undefined || value === '') continue;
+      const number = Number(value);
+      if (Number.isFinite(number)) return number;
+    }
+    return null;
+  }
+  function normalizeHeatmapLevel(day) {
+    const explicit = day?.level ?? day?.grassLevel ?? day?.colorLevel;
+    if (Number.isInteger(Number(explicit)) && LEVELS[Number(explicit)]) return LEVELS[Number(explicit)];
+    if (typeof explicit === 'string' && LEVELS.includes(explicit)) return explicit;
+    const color = String(day?.color || day?.grassColor || day?.hexColor || '').trim().toLowerCase();
+    if (COLOR_LEVELS[color]) return COLOR_LEVELS[color];
+    const totalMinutes = numberOf(day?.totalDurationMinutes, day?.durationMinutes, day?.exerciseDurationMinutes);
+    if (totalMinutes !== null) return level(totalMinutes * 60);
+    const totalSeconds = numberOf(day?.totalSeconds, day?.durationSeconds, day?.exerciseDurationSeconds);
+    if (totalSeconds !== null) return level(totalSeconds);
+    return 'dark';
+  }
+  function heatmapTotalSeconds(day) {
+    const totalMinutes = numberOf(day?.totalDurationMinutes, day?.durationMinutes, day?.exerciseDurationMinutes);
+    if (totalMinutes !== null) return totalMinutes * 60;
+    const totalSeconds = numberOf(day?.totalSeconds, day?.durationSeconds, day?.exerciseDurationSeconds);
+    return totalSeconds === null ? undefined : totalSeconds;
+  }
+  function exerciseNameOf(value) {
+    return value?.exercise_name || value?.exercis_name || value?.exerciseName || value?.type || '';
+  }
+  function exerciseNamesOf(value) {
+    const exerciseNames = exerciseNameOf(value);
+    const names = Array.isArray(exerciseNames)
+      ? exerciseNames
+      : String(exerciseNames).split(/[,，]/);
+    return [...new Set(names.map(name => String(name).trim()).filter(Boolean))];
+  }
   // Used only by the local demo adapter. The API must return server-side totals.
   function splitSession(session) {
     const start = Date.parse(session.startedAt), end = Date.parse(session.endedAt);
@@ -106,7 +155,8 @@
         return result.facilities.map(facility => ({
           id: String(facility.facilityId),
           name: facility.name,
-          type: facility.type,
+          exerciseName: exerciseNameOf(facility),
+          type: exerciseNameOf(facility),
           address: facility.address,
           latitude: facility.latitude,
           longitude: facility.longitude,
@@ -117,9 +167,8 @@
       },
       async sports(locationId, locationOverride) {
         if (!demo) {
-          const facilitySport = locationOverride?.type
-            ? [{ id: locationOverride.type, name: locationOverride.type }]
-            : [];
+          const facilitySport = exerciseNamesOf(locationOverride)
+            .map(name => ({ id: name, name }));
           return facilitySport.length ? facilitySport : sports;
         }
         const location = demoLocations.find(item => item.id === locationId);
@@ -132,7 +181,6 @@
           const today = dateKey(now());
           const endDate = to && to < today ? to : today;
           const heatmap = await request(`/members/exercise-records/heatmap?${new URLSearchParams({ endDate })}`);
-          const levels = ['dark', 'main1', 'main2', 'main3', 'main4'];
           return {
             activeSession: readJson(API_ACTIVE_KEY),
             lastSession: readJson(API_LAST_KEY),
@@ -141,7 +189,8 @@
               .map(day => ({
                 date: day.date,
                 count: day.count,
-                level: levels[day.level] || 'dark',
+                ...(heatmapTotalSeconds(day) === undefined ? {} : { totalSeconds: heatmapTotalSeconds(day) }),
+                level: normalizeHeatmapLevel(day),
               })),
           };
         }
@@ -163,14 +212,15 @@
             records: result.records.map((record, index) => {
               const matched = metadata.find(item =>
                 !item.used &&
-                item.exerciseName === record.exerciseName &&
+                item.exerciseName === exerciseNameOf(record) &&
                 item.durationMinutes === record.durationMinutes
               );
               if (matched) matched.used = true;
+              const recordExerciseName = exerciseNameOf(record);
               return {
                 id: matched?.recordId || `${result.date}-${index}`,
                 locationName: matched?.locationName || '',
-                sportName: record.exerciseName,
+                sportName: recordExerciseName,
                 startedAt: matched?.startedAt,
                 endedAt: matched?.endedAt,
                 durationSeconds: record.durationMinutes * 60,
@@ -236,7 +286,7 @@
           metadata.push({
             recordId: created.recordId,
             exerciseDate: created.exerciseDate,
-            exerciseName: created.exerciseName,
+            exerciseName: exerciseNameOf(created),
             durationMinutes: created.durationMinutes,
             locationName: active.locationName,
             startedAt: active.startedAt,
@@ -258,7 +308,7 @@
       }
     };
   }
-  const api = { STORAGE_KEY, API_ACTIVE_KEY, API_LAST_KEY, API_RECORD_META_KEY, SELECTED_FACILITY_KEY, dateKey, duration, level, splitSession, createService };
+  const api = { STORAGE_KEY, API_ACTIVE_KEY, API_LAST_KEY, API_RECORD_META_KEY, SELECTED_FACILITY_KEY, dateKey, duration, level, normalizeHeatmapLevel, splitSession, createService };
   if (typeof module !== 'undefined') module.exports = api;
   else root.SprintWorkout = api;
 })(typeof window === 'undefined' ? globalThis : window);

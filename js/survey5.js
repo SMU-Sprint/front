@@ -1,4 +1,5 @@
 const API_BASE_URL = "https://sprintkr.site/api/v1";
+let recommendationRequestInFlight = false;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -24,6 +25,8 @@ function normalizeRecommendations(data) {
     .map((item, index) => ({
       rank: item.rank ?? index + 1,
       exerciseName:
+        item.exercise_name ||
+        item.exercis_name ||
         item.exerciseName ||
         item.name ||
         item.sportName ||
@@ -41,7 +44,7 @@ function normalizeRecommendations(data) {
 
 function renderLoading(recommendationBox) {
   recommendationBox.innerHTML = `
-    <div class="question-group">
+    <div class="question-group recommendation-status">
       <p class="question-title">AI 운동 추천을 불러오는 중입니다...</p>
       <p class="recommend-desc">잠시만 기다려 주세요.</p>
     </div>
@@ -50,9 +53,13 @@ function renderLoading(recommendationBox) {
 
 function renderError(recommendationBox, message) {
   recommendationBox.innerHTML = `
-    <div class="question-group">
+    <div class="question-group recommendation-status">
       <p class="question-title">운동 추천을 불러오지 못했습니다.</p>
       <p class="recommend-desc">${escapeHtml(message)}</p>
+      <p class="retry-prompt">재추천하시겠습니까?</p>
+      <button type="button" id="retryRecommendationBtn" class="retry-btn">
+        재추천 받기
+      </button>
     </div>
   `;
 }
@@ -92,6 +99,8 @@ function renderRecommendations(recommendationBox, recommendations) {
 }
 
 async function loadRecommendation() {
+  if (recommendationRequestInFlight) return;
+
   const accessToken = localStorage.getItem("accessToken");
   const recommendationBox = document.getElementById("recommendationBox");
   if (!recommendationBox) return;
@@ -102,6 +111,7 @@ async function loadRecommendation() {
     return;
   }
 
+  recommendationRequestInFlight = true;
   renderLoading(recommendationBox);
 
   try {
@@ -143,10 +153,17 @@ async function loadRecommendation() {
       recommendationBox,
       error.message || "서버와 통신 중 오류가 발생했습니다.",
     );
+  } finally {
+    recommendationRequestInFlight = false;
   }
 }
 
 document.addEventListener("DOMContentLoaded", loadRecommendation);
+document.addEventListener("click", function (event) {
+  if (event.target.closest?.("#retryRecommendationBtn")) {
+    loadRecommendation();
+  }
+});
 
 const completeBtn = document.getElementById("completeBtn");
 if (completeBtn) {

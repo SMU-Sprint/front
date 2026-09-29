@@ -40,8 +40,9 @@
   }
 
   function createInfoContent(location) {
-    const type = location.type
-      ? `<span style="display:block;margin-top:4px;color:#52655b">${escapeHtml(location.type)}</span>`
+    const exerciseName = location.exerciseName || location.type;
+    const type = exerciseName
+      ? `<span style="display:block;margin-top:4px;color:#52655b">${escapeHtml(exerciseName)}</span>`
       : "";
     const address = location.address
       ? `<p style="margin:6px 0 0;max-width:240px;color:#64716a;line-height:1.4">${escapeHtml(location.address)}</p>`

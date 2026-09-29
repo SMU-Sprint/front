@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { createService, splitSession, dateKey, level, duration } = require('../js/workout-service.js');
+const { createService, splitSession, dateKey, level, duration, normalizeHeatmapLevel } = require('../js/workout-service.js');
 const { calendarMonth } = require('../js/calendar.js');
 function memory() {
   const data = new Map();
@@ -69,7 +69,7 @@ test('API heatmap and daily records use the Swagger response contract and bearer
       calls.push({ url, options });
       const result = url.includes('/heatmap')
         ? { days: [{ date: '2026-09-16', count: 2, level: 3 }] }
-        : { date: '2026-09-16', totalDurationMinutes: 35, records: [{ exerciseName: '러닝', durationMinutes: 35 }] };
+        : { date: '2026-09-16', totalDurationMinutes: 35, records: [{ exercise_name: '러닝', durationMinutes: 35 }] };
       return { ok: true, status: 200, json: async () => ({ isSuccess: true, result }) };
     },
   });
@@ -94,11 +94,11 @@ test('API mode keeps the live timer locally and submits a completed record on st
     uuid: () => 'local-session',
     fetch: async (url, request) => {
       calls.push({ url, request });
-      return { ok: true, status: 200, json: async () => ({ isSuccess: true, result: { recordId: 7, exerciseDate: '2026-09-16', exerciseName: '러닝', durationMinutes: 2 } }) };
+      return { ok: true, status: 200, json: async () => ({ isSuccess: true, result: { recordId: 7, exerciseDate: '2026-09-16', exercise_name: '러닝', durationMinutes: 2 } }) };
     },
   };
   const api = createService(options);
-  const facility = { id: '10', name: '한강 운동장', type: '러닝' };
+  const facility = { id: '10', name: '한강 운동장', exerciseName: '러닝' };
   const started = await api.start(facility.id, '러닝', facility);
   assert.equal(started.id, 'local-session');
   await assert.rejects(api.start(facility.id, '러닝', facility), /진행 중/);
@@ -109,7 +109,12 @@ test('API mode keeps the live timer locally and submits a completed record on st
   assert.equal(calls[0].url, 'https://sprintkr.site/api/v1/members/exercise-records');
   assert.deepEqual(JSON.parse(calls[0].request.body), { exerciseDate: '2026-09-16', exerciseName: '러닝', durationMinutes: 2 });
 });
-test('facility search maps the Swagger facility fields without CSV data', async () => {
+test('API heatmap colors can be derived from backend levels, colors or durations', () => {
+  assert.equal(normalizeHeatmapLevel({ level: 4 }), 'main4');
+  assert.equal(normalizeHeatmapLevel({ color: '#b6eb7a' }), 'main3');
+  assert.equal(normalizeHeatmapLevel({ totalDurationMinutes: 35 }), 'main2');
+});
+test('facility search maps the API exercise_name field without CSV data', async () => {
   const storage = memory();
   storage.setItem('accessToken', 'token');
   const api = createService({
@@ -118,9 +123,26 @@ test('facility search maps the Swagger facility fields without CSV data', async 
     fetch: async (url) => ({
       ok: true,
       status: 200,
-      json: async () => ({ isSuccess: true, result: { facilities: [{ facilityId: 3, name: '체육관', type: '배드민턴', address: '서울', latitude: 37.5, longitude: 127, distanceKm: 0.4 }] } }),
+      json: async () => ({ isSuccess: true, result: { facilities: [{ facilityId: 3, name: '체육관', exercise_name: '배드민턴', address: '서울', latitude: 37.5, longitude: 127, distanceKm: 0.4 }] } }),
     }),
   });
   const facilities = await api.locations({ latitude: 37.5, longitude: 127, radiusKm: 1 });
-  assert.deepEqual(facilities[0], { id: '3', name: '체육관', type: '배드민턴', address: '서울', latitude: 37.5, longitude: 127, distanceKm: 0.4, openTime: undefined, closeTime: undefined });
+  assert.deepEqual(facilities[0], { id: '3', name: '체육관', exerciseName: '배드민턴', type: '배드민턴', address: '서울', latitude: 37.5, longitude: 127, distanceKm: 0.4, openTime: undefined, closeTime: undefined });
+});
+test('API facility exercise names are exposed as separate sport options', async () => {
+  const storage = memory();
+  storage.setItem('accessToken', 'token');
+  const api = createService({ config: { mode: 'api', apiBase: '/api/v1' }, storage });
+  const facility = {
+    id: '3',
+    name: '체육관',
+    exerciseName: '맨몸운동, 스트레칭, 국민체조, 생활체육, 맨몸운동',
+  };
+
+  assert.deepEqual(await api.sports(facility.id, facility), [
+    { id: '맨몸운동', name: '맨몸운동' },
+    { id: '스트레칭', name: '스트레칭' },
+    { id: '국민체조', name: '국민체조' },
+    { id: '생활체육', name: '생활체육' },
+  ]);
 });
