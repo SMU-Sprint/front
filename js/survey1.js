@@ -1,5 +1,6 @@
 const nextBtn = document.getElementById("nextBtn");
 const purposeEtcInput = document.getElementById("purposeEtcInput");
+const experienceDetailInput = document.getElementById("experienceDetailInput");
 const constraintEtcInput = document.getElementById("constraintEtcInput");
 
 function readStoredSingle(key) {
@@ -24,10 +25,12 @@ function readStoredArray(key) {
 
 function updateConditionalFields() {
   const purpose = document.querySelector('input[name="purpose"]:checked')?.value;
+  const experience = document.querySelector('input[name="experience"]:checked')?.value;
   const limits = Array.from(
     document.querySelectorAll('input[name="limit"]:checked'),
   ).map((input) => input.value);
   purposeEtcInput.hidden = purpose !== "기타";
+  experienceDetailInput.hidden = experience !== "있다";
   constraintEtcInput.hidden = !limits.includes("기타");
 }
 
@@ -40,6 +43,7 @@ function checkFormValidation() {
   const valid =
     Boolean(purpose && experience && limits.length) &&
     (purpose !== "기타" || purposeEtcInput.value.trim() !== "") &&
+    (experience.value !== "있다" || experienceDetailInput.value.trim() !== "") &&
     (!limits.includes("기타") || constraintEtcInput.value.trim() !== "");
 
   nextBtn.classList.toggle("on", valid);
@@ -62,6 +66,10 @@ function saveDataAndValidate() {
   sessionStorage.setItem(
     "survey_exercisePurposeEtc",
     purpose === "기타" ? purposeEtcInput.value.trim() : "",
+  );
+  sessionStorage.setItem(
+    "survey_experienceDetail",
+    experience === "있다" ? experienceDetailInput.value.trim() : "",
   );
   sessionStorage.setItem(
     "survey_constraintEtc",
@@ -91,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
     input.checked = savedLimits.includes(input.value);
   });
   purposeEtcInput.value = sessionStorage.getItem("survey_exercisePurposeEtc") || "";
+  experienceDetailInput.value = sessionStorage.getItem("survey_experienceDetail") || "";
   constraintEtcInput.value = sessionStorage.getItem("survey_constraintEtc") || "";
 
   updateConditionalFields();
@@ -101,6 +110,7 @@ document
   .querySelectorAll('input[type="checkbox"], input[type="radio"]')
   .forEach((input) => input.addEventListener("change", saveDataAndValidate));
 purposeEtcInput.addEventListener("input", saveDataAndValidate);
+experienceDetailInput.addEventListener("input", saveDataAndValidate);
 constraintEtcInput.addEventListener("input", saveDataAndValidate);
 
 nextBtn.addEventListener("click", function () {

@@ -21,6 +21,45 @@
     if (seconds < 7200) return 'main3';
     return 'main4';
   }
+  const LEVELS = ['dark', 'main1', 'main2', 'main3', 'main4'];
+  const COLOR_LEVELS = {
+    dark: 'dark',
+    main1: 'main1',
+    main2: 'main2',
+    main3: 'main3',
+    main4: 'main4',
+    '#d9d9d9': 'dark',
+    '#f4fce9': 'main1',
+    '#eaf6ad': 'main2',
+    '#b6eb7a': 'main3',
+    '#17706e': 'main4',
+  };
+  function numberOf(...values) {
+    for (const value of values) {
+      if (value === null || value === undefined || value === '') continue;
+      const number = Number(value);
+      if (Number.isFinite(number)) return number;
+    }
+    return null;
+  }
+  function normalizeHeatmapLevel(day) {
+    const explicit = day?.level ?? day?.grassLevel ?? day?.colorLevel;
+    if (Number.isInteger(Number(explicit)) && LEVELS[Number(explicit)]) return LEVELS[Number(explicit)];
+    if (typeof explicit === 'string' && LEVELS.includes(explicit)) return explicit;
+    const color = String(day?.color || day?.grassColor || day?.hexColor || '').trim().toLowerCase();
+    if (COLOR_LEVELS[color]) return COLOR_LEVELS[color];
+    const totalMinutes = numberOf(day?.totalDurationMinutes, day?.durationMinutes, day?.exerciseDurationMinutes);
+    if (totalMinutes !== null) return level(totalMinutes * 60);
+    const totalSeconds = numberOf(day?.totalSeconds, day?.durationSeconds, day?.exerciseDurationSeconds);
+    if (totalSeconds !== null) return level(totalSeconds);
+    return 'dark';
+  }
+  function heatmapTotalSeconds(day) {
+    const totalMinutes = numberOf(day?.totalDurationMinutes, day?.durationMinutes, day?.exerciseDurationMinutes);
+    if (totalMinutes !== null) return totalMinutes * 60;
+    const totalSeconds = numberOf(day?.totalSeconds, day?.durationSeconds, day?.exerciseDurationSeconds);
+    return totalSeconds === null ? undefined : totalSeconds;
+  }
   function exerciseNameOf(value) {
     return value?.exercise_name || value?.exercis_name || value?.exerciseName || value?.type || '';
   }
@@ -142,7 +181,6 @@
           const today = dateKey(now());
           const endDate = to && to < today ? to : today;
           const heatmap = await request(`/members/exercise-records/heatmap?${new URLSearchParams({ endDate })}`);
-          const levels = ['dark', 'main1', 'main2', 'main3', 'main4'];
           return {
             activeSession: readJson(API_ACTIVE_KEY),
             lastSession: readJson(API_LAST_KEY),
@@ -151,7 +189,8 @@
               .map(day => ({
                 date: day.date,
                 count: day.count,
-                level: levels[day.level] || 'dark',
+                ...(heatmapTotalSeconds(day) === undefined ? {} : { totalSeconds: heatmapTotalSeconds(day) }),
+                level: normalizeHeatmapLevel(day),
               })),
           };
         }
@@ -269,7 +308,7 @@
       }
     };
   }
-  const api = { STORAGE_KEY, API_ACTIVE_KEY, API_LAST_KEY, API_RECORD_META_KEY, SELECTED_FACILITY_KEY, dateKey, duration, level, splitSession, createService };
+  const api = { STORAGE_KEY, API_ACTIVE_KEY, API_LAST_KEY, API_RECORD_META_KEY, SELECTED_FACILITY_KEY, dateKey, duration, level, normalizeHeatmapLevel, splitSession, createService };
   if (typeof module !== 'undefined') module.exports = api;
   else root.SprintWorkout = api;
 })(typeof window === 'undefined' ? globalThis : window);

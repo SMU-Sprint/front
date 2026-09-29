@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { createService, splitSession, dateKey, level, duration } = require('../js/workout-service.js');
+const { createService, splitSession, dateKey, level, duration, normalizeHeatmapLevel } = require('../js/workout-service.js');
 const { calendarMonth } = require('../js/calendar.js');
 function memory() {
   const data = new Map();
@@ -108,6 +108,11 @@ test('API mode keeps the live timer locally and submits a completed record on st
   assert.equal(stopped.durationSeconds, 120);
   assert.equal(calls[0].url, 'https://sprintkr.site/api/v1/members/exercise-records');
   assert.deepEqual(JSON.parse(calls[0].request.body), { exerciseDate: '2026-09-16', exerciseName: '러닝', durationMinutes: 2 });
+});
+test('API heatmap colors can be derived from backend levels, colors or durations', () => {
+  assert.equal(normalizeHeatmapLevel({ level: 4 }), 'main4');
+  assert.equal(normalizeHeatmapLevel({ color: '#b6eb7a' }), 'main3');
+  assert.equal(normalizeHeatmapLevel({ totalDurationMinutes: 35 }), 'main2');
 });
 test('facility search maps the API exercise_name field without CSV data', async () => {
   const storage = memory();

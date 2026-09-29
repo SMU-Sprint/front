@@ -10,6 +10,40 @@ document.addEventListener("DOMContentLoaded", async function () {
   // 회원 정보 요청과 관계없이 사진 선택 기능은 페이지가 열리자마자 활성화한다.
   const avatarElem = document.querySelector(".avatar");
   const profileImageInput = document.getElementById("profileImageInput");
+  let profileImageKey = getProfileImageKey();
+
+  function getTokenSubject() {
+    try {
+      const payload = accessToken.split(".")[1];
+      if (!payload) return "";
+      const normalized = payload
+        .replace(/-/g, "+")
+        .replace(/_/g, "/")
+        .padEnd(Math.ceil(payload.length / 4) * 4, "=");
+      const decoded = JSON.parse(
+        decodeURIComponent(
+          atob(normalized)
+            .split("")
+            .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`)
+            .join(""),
+        ),
+      );
+      return decoded.sub || decoded.email || decoded.memberId || decoded.id || "";
+    } catch {
+      return "";
+    }
+  }
+
+  function getProfileImageKey(user = {}) {
+    const identity =
+      user.memberId ||
+      user.id ||
+      user.email ||
+      user.loginId ||
+      getTokenSubject() ||
+      "anonymous";
+    return `user_profile_image:${identity}`;
+  }
 
   function showProfileImage(imageUrl) {
     if (!avatarElem || !imageUrl) return;
@@ -17,8 +51,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     avatarElem.classList.add("has-image");
   }
 
-  const savedProfileImg = localStorage.getItem("user_profile_image");
-  showProfileImage(savedProfileImg);
+  function clearProfileImage() {
+    if (!avatarElem) return;
+    avatarElem.style.backgroundImage = "";
+    avatarElem.classList.remove("has-image");
+  }
+
+  function loadProfileImage() {
+    const savedProfileImg = localStorage.getItem(profileImageKey);
+    if (savedProfileImg) showProfileImage(savedProfileImg);
+    else clearProfileImage();
+  }
+
+  loadProfileImage();
 
   if (profileImageInput && avatarElem) {
     profileImageInput.addEventListener("change", function (event) {
@@ -37,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         // 저장 용량이 부족하더라도 선택한 사진은 즉시 화면에 보여준다.
         showProfileImage(base64Image);
         try {
-          localStorage.setItem("user_profile_image", base64Image);
+          localStorage.setItem(profileImageKey, base64Image);
           alert("프로필 사진이 성공적으로 변경되었습니다!");
         } catch (error) {
           console.error("프로필 사진 저장 실패:", error);
@@ -70,6 +115,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (memberResponse.ok && memberData.isSuccess && memberData.result) {
       const user = memberData.result;
+      profileImageKey = getProfileImageKey(user);
+      loadProfileImage();
 
       const ageElem = document.getElementById("profileAge");
       const genderElem = document.getElementById("profileGender");

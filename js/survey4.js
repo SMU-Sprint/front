@@ -4,6 +4,7 @@ const SURVEY_STORAGE_KEYS = [
   "survey_purpose",
   "survey_exercisePurposeEtc",
   "survey_experienceFlag",
+  "survey_experienceDetail",
   "survey_constraintTypes",
   "survey_constraintEtc",
   "survey_occupationType",
@@ -75,6 +76,7 @@ function buildSurveyPayload() {
   const payload = {
     exercisePurpose,
     exerciseExperienceFlag: readBoolean("survey_experienceFlag"),
+    exerciseExperienceDetail: readString("survey_experienceDetail"),
     preferredSport,
     occupationType: readString("survey_occupationType"),
     vigorousDays: readNumber("survey_vigorousDays"),
@@ -94,6 +96,9 @@ function buildSurveyPayload() {
   if (exercisePurpose === "기타") {
     payload.exercisePurposeEtc = readString("survey_exercisePurposeEtc");
   }
+  if (!payload.exerciseExperienceFlag) {
+    delete payload.exerciseExperienceDetail;
+  }
   if (exerciseSpot === "기타") {
     payload.exerciseSpotEtc = readString("survey_exerciseSpotEtc");
   }
@@ -110,6 +115,9 @@ function validateSurveyPayload(payload) {
   }
   if (payload.exercisePurpose === "기타" && !payload.exercisePurposeEtc) {
     throw new Error("기타 운동 목적을 입력해 주세요.");
+  }
+  if (payload.exerciseExperienceFlag && !payload.exerciseExperienceDetail) {
+    throw new Error("어떤 운동을 해보았는지 입력해 주세요.");
   }
   if (!ALLOWED_VALUES.occupationType.includes(payload.occupationType)) {
     throw new Error("직업 특성을 설문 2에서 다시 선택해 주세요.");

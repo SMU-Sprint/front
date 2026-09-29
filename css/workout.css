@@ -33,6 +33,13 @@ a:focus-visible {
   color: #b34516;
 }
 
+.workout-message .login-required-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .map-and-locations {
   width: min(800px, 100%);
   min-width: 0;
