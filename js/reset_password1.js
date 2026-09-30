@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   const verifyCodeBtn = document.getElementById("verify-code-btn");
   const nextBtn = document.getElementById("next-btn");
 
+  let userEmail = ""; // 이메일 검증 API 호출 시 사용하기 위해 전역 변수로 선언
+
   // 1. 페이지 진입 시 현재 로그인된 회원의 이메일 자동 조회하여 input에 세팅
   try {
     const res = await fetch("https://sprintkr.site/api/v1/members/me", {
@@ -23,7 +25,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
     const data = await res.json();
     if (res.ok && data.isSuccess && data.result && data.result.email) {
-      emailInput.value = data.result.email;
+      userEmail = data.result.email;
+      emailInput.value = userEmail;
       emailInput.disabled = true; // 이메일 수정 불가 고정
     }
   } catch (error) {
@@ -41,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     try {
       sendCodeBtn.style.pointerEvents = "none";
 
-      // 💡 올바른 비밀번호 변경 메일 인증 API 엔드포인트 연동
       const response = await fetch(
         "https://sprintkr.site/api/v1/mail/verification/password-change",
         {
@@ -94,8 +96,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // 3. '인증번호 확인' 버튼 클릭 이벤트
-  verifyCodeBtn.addEventListener("click", function () {
+  // 3. '인증번호 확인' 버튼 클릭 이벤트 (서버 검증 API 연동)
+  verifyCodeBtn.addEventListener("click", async function () {
     const codeVal = verificationCodeInput.value.trim();
     if (!codeVal) {
       alert("인증번호를 입력해주세요.");
@@ -103,12 +105,53 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    // 다음 비밀번호 변경 단계에서 사용할 수 있도록 세션에 인증 코드 저장
-    sessionStorage.setItem("password_change_code", codeVal);
+    try {
+      verifyCodeBtn.style.pointerEvents = "none";
 
-    alert("인증이 완료되었습니다.");
-    nextBtn.disabled = false; // '다음' 버튼 활성화
-    nextBtn.classList.add("active");
+      // 스웨거 명세에 따른 이메일 인증 코드 검증 API 호출
+      const response = await fetch(
+        "https://sprintkr.site/api/v1/mail/verification/confirm",
+        {
+          method: "POST",
+          headers: {
+            accept: "*/*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: userEmail,
+            code: codeVal,
+            purpose: "PASSWORD_CHANGE", // 비밀번호 변경 목적
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (response.ok && result.isSuccess) {
+        alert("인증이 완료되었습니다.");
+
+        // 서버에서 발급해 준 검증 토큰(token)을 세션에 저장
+        if (result.result && result.result.token) {
+          sessionStorage.setItem("verification_token", result.result.token);
+        }
+
+        nextBtn.disabled = false; // '다음' 버튼 활성화
+        nextBtn.classList.add("active");
+
+        // 입력창만 잠그고, 확인 버튼은 `disabled = true` 처리하지 않아 회색으로 변하는 것을 방지
+        verificationCodeInput.disabled = true;
+        verifyCodeBtn.style.pointerEvents = "none"; // 클릭만 막고
+        verifyCodeBtn.classList.add("active"); // 초록색(active) 클래스를 유지하거나 강제 부여
+      } else {
+        alert(result.message || "인증번호가 일치하지 않거나 만료되었습니다.");
+        verificationCodeInput.focus();
+        verifyCodeBtn.style.pointerEvents = "auto";
+      }
+    } catch (error) {
+      console.error("인증번호 검증 통신 에러:", error);
+      alert("서버와 통신 중 오류가 발생했습니다.");
+      verifyCodeBtn.style.pointerEvents = "auto";
+    }
   });
 
   // 4. '다음' 버튼 클릭 시 새 비밀번호 설정 페이지(reset_password.html)로 이동

@@ -8,6 +8,7 @@ const nextImage = document.getElementById("nextImage");
 
 let isRequestSent = false;
 let isVerified = false;
+let verificationToken = ""; // 서버에서 발급받은 검증 토큰을 저장할 변수
 
 // 1. 이메일 입력 시 초록색 테두리 변경 및 '인증번호 받기' 버튼 활성화
 emailInput.addEventListener("input", function () {
@@ -80,8 +81,9 @@ codeInput.addEventListener("input", function () {
   }
 });
 
-// 4. 인증번호 확인 버튼 클릭 시 (로컬 상에서 우선 완료 처리)
-authConfirmBtn.addEventListener("click", function () {
+// 4. 인증번호 확인 버튼 클릭 시 이메일 인증 코드 검증 API 연동 (`/api/v1/mail/verification/confirm`)
+authConfirmBtn.addEventListener("click", async function () {
+  const emailVal = emailInput.value.trim();
   const userCode = codeInput.value.trim();
 
   if (!isRequestSent) {
@@ -89,31 +91,60 @@ authConfirmBtn.addEventListener("click", function () {
     return;
   }
 
-  if (userCode !== "") {
-    errorMsg.classList.remove("show");
-    isVerified = true;
-    nextImage.src = "../images/next_on.png"; // 다음 버튼 활성화 이미지
-    alert(
-      "인증번호가 확인되었습니다. 다음 버튼을 눌러 임시 비밀번호를 발급받으세요.",
-    );
-  } else {
+  if (!userCode) {
     errorMsg.classList.add("show");
-    isVerified = false;
-    nextImage.src = "../images/next_off.png";
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "https://sprintkr.site/api/v1/mail/verification/confirm",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "*/*",
+        },
+        body: JSON.stringify({
+          email: emailVal,
+          code: userCode,
+          purpose: "FIND_PASSWORD", // 비밀번호 찾기 목적 지정 (API 명세서 참고)
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok && data.isSuccess) {
+      errorMsg.classList.remove("show");
+      isVerified = true;
+      verificationToken = data.result.token; // 발급받은 검증 토큰 저장
+      nextImage.src = "../images/next_on.png"; // 다음 버튼 활성화 이미지
+      alert(
+        "인증번호가 확인되었습니다. 다음 버튼을 눌러 임시 비밀번호를 발급받으세요.",
+      );
+    } else {
+      errorMsg.classList.add("show");
+      isVerified = false;
+      nextImage.src = "../images/next_off.png";
+      alert(data.message || "인증 코드가 만료되었거나 일치하지 않습니다.");
+    }
+  } catch (error) {
+    console.error("통신 에러:", error);
+    alert("서버와 통신 중 오류가 발생했습니다.");
   }
 });
 
-// 5. 다음 버튼 클릭 시 비밀번호 리셋 API(`/api/v1/members/password/reset`) 호출
+// 5. 다음 버튼 클릭 시 비밀번호 리셋 API 호출
 nextButton.addEventListener("click", async function (e) {
   e.preventDefault();
 
-  if (!isVerified) {
-    alert("인증번호 확인이 필요합니다.");
+  if (!isVerified || !verificationToken) {
+    alert("인증번호 확인이 먼저 완료되어야 합니다.");
     return;
   }
 
   const emailVal = emailInput.value.trim();
-  const codeVal = codeInput.value.trim();
 
   try {
     nextButton.style.pointerEvents = "none";
@@ -128,7 +159,7 @@ nextButton.addEventListener("click", async function (e) {
         },
         body: JSON.stringify({
           email: emailVal,
-          code: codeVal,
+          token: verificationToken, // code 대신 발급받은 토큰 전달 (백엔드 스펙에 따라 필드명이 다를 수 있으므로 확인 필요)
         }),
       },
     );
@@ -139,15 +170,9 @@ nextButton.addEventListener("click", async function (e) {
       alert(
         "임시 비밀번호가 이메일로 발급되었습니다! 로그인 화면으로 이동합니다.",
       );
-      window.location.href = "login.html"; // 발급 완료 후 로그인 페이지로 이동
+      window.location.href = "login.html";
     } else {
-      if (response.status === 400) {
-        alert("인증 코드가 만렸거나 일치하지 않습니다.");
-      } else if (response.status === 404) {
-        alert("발급된 인증 코드가 없거나 회원을 찾을 수 없습니다.");
-      } else {
-        alert(data.message || "임시 비밀번호 발급에 실패했습니다.");
-      }
+      alert(data.message || "임시 비밀번호 발급에 실패했습니다.");
       nextButton.style.pointerEvents = "auto";
     }
   } catch (error) {

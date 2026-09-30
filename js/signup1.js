@@ -6,7 +6,7 @@ const errorMsg = document.getElementById("errorMsg");
 const nextButton = document.getElementById("nextButton");
 const nextImage = document.getElementById("nextImage");
 
-// 인증번호 요청이 성공했는지 확인하는 플래그
+// 인증번호 요청 및 확인 상태 플래그
 let isRequestSent = false;
 let isVerified = false;
 
@@ -51,7 +51,10 @@ authRequestBtn.addEventListener("click", async function () {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({
+          email: email,
+          purpose: "SIGNUP",
+        }),
       },
     );
 
@@ -81,8 +84,9 @@ authRequestBtn.addEventListener("click", async function () {
   }
 });
 
-// 4. 인증번호 확인 버튼 클릭
-authConfirmBtn.addEventListener("click", function () {
+// 4. '인증번호 확인' 버튼 클릭 시 서버 API로 실제 검증 수행
+authConfirmBtn.addEventListener("click", async function () {
+  const email = emailInput.value.trim();
   const userCode = codeInput.value.trim();
 
   if (!isRequestSent) {
@@ -90,23 +94,68 @@ authConfirmBtn.addEventListener("click", function () {
     return;
   }
 
-  if (userCode !== "") {
-    errorMsg.classList.remove("show");
-    isVerified = true;
-    nextImage.src = "../images/next_on.png";
-    alert("인증번호가 입력되었습니다. 다음 단계를 진행해주세요.");
-  } else {
+  if (!userCode) {
+    errorMsg.textContent = "인증번호를 입력해주세요.";
+    errorMsg.classList.add("show");
+    return;
+  }
+
+  try {
+    authConfirmBtn.disabled = true;
+
+    // 💡 purpose를 "SIGN_UP" (언더바 포함)으로 수정
+    const response = await fetch(
+      "https://sprintkr.site/api/v1/mail/verification/confirm",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          code: userCode,
+          purpose: "SIGN_UP",
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (response.ok && data.isSuccess) {
+      // ✅ 인증 성공 시
+      errorMsg.classList.remove("show");
+      isVerified = true;
+      nextImage.src = "../images/next_on.png";
+
+      // 서버가 발급해 준 검증 토큰(token)을 세션에 저장 (다음 회원가입 페이지에서 필요할 수 있음)
+      if (data.result && data.result.token) {
+        sessionStorage.setItem("verificationToken", data.result.token);
+      }
+
+      alert("인증이 완료되었습니다.");
+    } else {
+      // ❌ 인증 실패 시 (틀린 번호, 만료 등)
+      errorMsg.textContent = data.message || "인증번호가 일치하지 않습니다.";
+      errorMsg.classList.add("show");
+      isVerified = false;
+      nextImage.src = "../images/next_off.png";
+    }
+  } catch (error) {
+    console.error("통신 에러:", error);
+    errorMsg.textContent = "서버와 통신 중 오류가 발생했습니다.";
     errorMsg.classList.add("show");
     isVerified = false;
     nextImage.src = "../images/next_off.png";
+  } finally {
+    authConfirmBtn.disabled = false;
   }
 });
 
-// 5. 다음 버튼 클릭 시 이메일과 인증 코드를 sessionStorage에 안전하게 저장 후 이동
+// 5. 다음 버튼 클릭 시 이메일, 인증코드, 토큰을 sessionStorage에 저장 후 이동
 nextButton.addEventListener("click", function (e) {
   if (!isVerified) {
     e.preventDefault();
-    alert("인증번호 확인이 필요합니다.");
+    alert("인증번호 확인이 완료되지 않았습니다.");
   } else {
     sessionStorage.setItem("signupEmail", emailInput.value.trim());
     sessionStorage.setItem("authCode", codeInput.value.trim());

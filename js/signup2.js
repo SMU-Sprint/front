@@ -16,6 +16,7 @@ const savedEmail = sessionStorage.getItem("signupEmail");
 if (savedEmail) {
   emailInput.value = savedEmail;
   emailInput.classList.add("active");
+  emailInput.disabled = true; // 이메일 수정 불가 처리 (선택사항)
 }
 
 function updateFormState() {
@@ -64,8 +65,7 @@ locationCheck.addEventListener("change", updateFormState);
 
 updateFormState();
 
-// '다음' 버튼 클릭 시 회원가입 API(`/api/v1/members`) 호출
-// '다음' 버튼 클릭 시 회원가입 API(`/api/v1/members`) 호출
+// '다음' 버튼 클릭 시 곧바로 회원가입 API(`/api/v1/members`) 호출
 nextButton.addEventListener("click", async function (e) {
   e.preventDefault();
 
@@ -86,7 +86,7 @@ nextButton.addEventListener("click", async function (e) {
     return;
   }
 
-  // 💡 비밀번호 유효성 검사 추가 (영문, 숫자, 특수문자 모두 포함, 8자 이상)
+  // 비밀번호 유효성 검사 (영문, 숫자, 특수문자 모두 포함, 8자 이상)
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   if (!passwordRegex.test(pwdVal)) {
     alert(
@@ -103,12 +103,13 @@ nextButton.addEventListener("click", async function (e) {
     return;
   }
 
-  // 세션에서 이메일과 인증 코드 가져오기
+  // 세션에서 인증 토큰 또는 인증 코드 가져오기
+  const verificationToken = sessionStorage.getItem("verificationToken");
   const authCode = sessionStorage.getItem("authCode");
   const sessionEmail = sessionStorage.getItem("signupEmail");
 
-  if (!authCode || !sessionEmail) {
-    alert("인증 정보가 없습니다. 첫 페이지에서 인증을 다시 진행해주세요.");
+  if (!sessionEmail) {
+    alert("세션 정보가 만료되었습니다. 처음부터 다시 진행해주세요.");
     window.location.href = "signup1.html";
     return;
   }
@@ -116,7 +117,8 @@ nextButton.addEventListener("click", async function (e) {
   try {
     nextButton.disabled = true;
 
-    // 백엔드 스웨거 명세에 맞추어 email, password, code 전송
+    // 💡 중복 확인 API 호출을 제거하고, 곧바로 회원가입 API 호출
+    // (백엔드 명세에 따라 필드명이 'name' 또는 'nickname', 'verificationToken' 또는 'code'일 수 있습니다)
     const response = await fetch("https://sprintkr.site/api/v1/members", {
       method: "POST",
       headers: {
@@ -124,8 +126,9 @@ nextButton.addEventListener("click", async function (e) {
       },
       body: JSON.stringify({
         email: sessionEmail,
+        name: nameVal,
         password: pwdVal,
-        code: authCode,
+        token: verificationToken || authCode, // 💡 verificationToken -> token 으로 변경
       }),
     });
 
@@ -134,15 +137,19 @@ nextButton.addEventListener("click", async function (e) {
     if (response.ok && data.isSuccess) {
       alert("회원가입이 완료되었습니다!");
 
-      // 발급된 토큰 저장
+      // 발급된 로그인 토큰이 있다면 저장 (구조에 맞게 조정)
       if (data.result && data.result.token) {
-        localStorage.setItem("accessToken", data.result.token.jwtAccessToken);
-        localStorage.setItem("refreshToken", data.result.token.jwtRefreshToken);
+        localStorage.setItem(
+          "accessToken",
+          data.result.token.jwtAccessToken || data.result.token,
+        );
       }
+
+      // 가입 완료 후 세션 정리
+      sessionStorage.clear();
 
       window.location.href = "signup3.html";
     } else {
-      // 서버에서 보내주는 에러 메시지 출력 (예: 인증 코드 오류 등)
       alert(data.message || "회원가입에 실패했습니다.");
     }
   } catch (error) {
