@@ -4,8 +4,7 @@ const nextImage = document.getElementById("nextImage");
 const nextButton = document.getElementById("nextButton");
 const emailError = document.getElementById("emailError");
 const passwordError = document.getElementById("passwordError");
-const API_ORIGIN = "https://sprintkr.site";
-const API_BASE_URL = `${API_ORIGIN}/api/v1`;
+const API_BASE_URL = "https://sprintkr.site/api/v1";
 
 function storeAuthTokens(token) {
   const accessToken =
@@ -19,24 +18,6 @@ function storeAuthTokens(token) {
   if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
   return Boolean(accessToken);
 }
-
-function completeSocialLoginFromUrl() {
-  const params = new URLSearchParams(
-    window.location.search || window.location.hash.replace(/^#/, "?"),
-  );
-  const token = {
-    jwtAccessToken:
-      params.get("jwtAccessToken") ||
-      params.get("accessToken") ||
-      params.get("token"),
-    jwtRefreshToken: params.get("jwtRefreshToken") || params.get("refreshToken"),
-  };
-  if (!storeAuthTokens(token)) return;
-  window.history.replaceState({}, document.title, window.location.pathname);
-  window.location.href = "main.html";
-}
-
-completeSocialLoginFromUrl();
 
 // 1. 입력할 때마다 버튼 이미지를 on/off로 전환
 function updateButtonState() {
@@ -104,12 +85,4 @@ nextButton.addEventListener("click", async function (e) {
   } finally {
     nextButton.style.pointerEvents = "auto";
   }
-});
-
-document.querySelectorAll("[data-provider]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const provider = button.dataset.provider;
-    if (!provider) return;
-    window.location.href = `${API_ORIGIN}/oauth2/authorization/${provider}`;
-  });
 });
