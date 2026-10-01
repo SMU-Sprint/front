@@ -6,10 +6,12 @@ const privacyCheck = document.getElementById("privacyCheck");
 const locationCheck = document.getElementById("locationCheck");
 
 const errorMsg = document.getElementById("errorMsg");
+const formErrorMsg = document.getElementById("formErrorMsg");
 const nextButton = document.getElementById("nextButton");
 const nextImage = document.getElementById("nextImage");
 
 const inputs = [emailInput, nameInput, passwordInput, confirmInput];
+const nameRegex = /^[A-Za-z가-힣]+$/;
 
 // 이전 페이지(첫 번째 단계)에서 저장해 둔 이메일이 있다면 자동으로 채워넣기
 const savedEmail = sessionStorage.getItem("signupEmail");
@@ -28,6 +30,7 @@ function updateFormState() {
     }
   });
 
+  const nameVal = nameInput.value.trim();
   const pwdVal = passwordInput.value.trim();
   const confirmVal = confirmInput.value.trim();
   const isPrivacyChecked = privacyCheck.checked;
@@ -40,10 +43,17 @@ function updateFormState() {
     errorMsg.classList.remove("show");
   }
 
+  if (nameVal !== "" && !nameRegex.test(nameVal)) {
+    showFormError("이름은 한글 또는 영문만 입력할 수 있습니다. 숫자와 기호는 사용할 수 없습니다.");
+  } else {
+    showFormError("");
+  }
+
   // 모든 조건 충족 시 다음 버튼 활성화 이미지로 변경
   if (
     emailInput.value.trim() !== "" &&
-    nameInput.value.trim() !== "" &&
+    nameVal !== "" &&
+    nameRegex.test(nameVal) &&
     pwdVal !== "" &&
     confirmVal !== "" &&
     pwdVal === confirmVal &&
@@ -54,6 +64,12 @@ function updateFormState() {
   } else {
     nextImage.src = "../images/next_off.png";
   }
+}
+
+function showFormError(message) {
+  if (!formErrorMsg) return;
+  formErrorMsg.textContent = message;
+  formErrorMsg.classList.toggle("show", Boolean(message));
 }
 
 // 이벤트 리스너 등록
@@ -82,23 +98,29 @@ nextButton.addEventListener("click", async function (e) {
     !privacyCheck.checked ||
     !locationCheck.checked
   ) {
-    alert("입력 정보를 다시 확인해주세요.");
+    if (!nameVal) nameInput.focus();
+    updateFormState();
+    showFormError("이메일, 이름, 비밀번호와 필수 동의 항목을 모두 확인해주세요.");
+    return;
+  }
+
+  if (!nameRegex.test(nameVal)) {
+    showFormError("이름은 한글 또는 영문만 입력할 수 있습니다. 숫자와 기호는 사용할 수 없습니다.");
+    nameInput.focus();
     return;
   }
 
   // 비밀번호 유효성 검사 (영문, 숫자, 특수문자 모두 포함, 8자 이상)
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   if (!passwordRegex.test(pwdVal)) {
-    alert(
-      "비밀번호는 영문, 숫자, 특수문자를 모두 포함한 8자 이상이어야 합니다.",
-    );
+    showFormError("비밀번호는 영문, 숫자, 특수문자를 모두 포함한 8자 이상이어야 합니다.");
     passwordInput.focus();
     return;
   }
 
   // 비밀번호 확인 일치 검사
   if (pwdVal !== confirmVal) {
-    alert("비밀번호가 일치하지 않습니다.");
+    showFormError("비밀번호가 일치하지 않습니다.");
     confirmInput.focus();
     return;
   }
@@ -109,8 +131,10 @@ nextButton.addEventListener("click", async function (e) {
   const sessionEmail = sessionStorage.getItem("signupEmail");
 
   if (!sessionEmail) {
-    alert("세션 정보가 만료되었습니다. 처음부터 다시 진행해주세요.");
-    window.location.href = "signup1.html";
+    showFormError("세션 정보가 만료되었습니다. 처음부터 다시 진행해주세요.");
+    setTimeout(() => {
+      window.location.href = "signup1.html";
+    }, 1200);
     return;
   }
 
@@ -150,11 +174,11 @@ nextButton.addEventListener("click", async function (e) {
 
       window.location.href = "signup3.html";
     } else {
-      alert(data.message || "회원가입에 실패했습니다.");
+      showFormError(data.message || "회원가입에 실패했습니다. 입력 정보를 다시 확인해주세요.");
     }
   } catch (error) {
     console.error("통신 에러:", error);
-    alert("서버와 통신 중 오류가 발생했습니다.");
+    showFormError("서버와 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
   } finally {
     nextButton.disabled = false;
   }

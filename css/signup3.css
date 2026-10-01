@@ -127,6 +127,21 @@ body {
   object-fit: contain;
 }
 
+.profile-error-message {
+  width: 563px;
+  min-height: 20px;
+  margin-top: 14px;
+  padding-left: 18px;
+  color: #ff7f00;
+  font-size: 14px;
+  line-height: 1.45;
+  visibility: hidden;
+}
+
+.profile-error-message.show {
+  visibility: visible;
+}
+
 /* ==========================================
    ✨ [추가] 지역, 요일, 시간대 드롭다운 패널 전용 스타일
    ========================================== */

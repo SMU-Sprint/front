@@ -1,5 +1,5 @@
 (() => {
-  const { service, dateKey, duration, time, message } = WorkoutUI;
+  const { service, dateKey, duration, durationWithoutSeconds, time, message } = WorkoutUI;
   const end = document.getElementById("endBtn");
   const refreshButton = document.getElementById("refresh-records");
   let activeSession = null;
@@ -29,7 +29,7 @@
       : lastSession
         ? "운동 종료"
         : "";
-    document.getElementById("session-elapsed").textContent = duration(
+    document.getElementById("session-elapsed").textContent = durationWithoutSeconds(
       activeSession
         ? (Date.now() - Date.parse(activeSession.startedAt)) / 1000
         : lastSession?.durationSeconds || 0,
@@ -57,7 +57,7 @@
       if (token !== recordVersion) return;
       list.replaceChildren();
       document.getElementById("record-total").textContent =
-        `총 ${duration(data.totalSeconds)}`;
+        `총 ${durationWithoutSeconds(data.totalSeconds)}`;
       if (!data.records.length) {
         list.textContent = "완료된 운동 기록이 없습니다.";
         return;
@@ -68,7 +68,7 @@
         const elapsed = document.createElement("b");
         const detail = document.createElement("small");
         title.textContent = record.sportName;
-        elapsed.textContent = duration(record.durationSeconds);
+        elapsed.textContent = durationWithoutSeconds(record.durationSeconds);
         const startedAt = record.segmentStartedAt || record.startedAt;
         const endedAt = record.segmentEndedAt || record.endedAt;
         const details = [record.locationName];
