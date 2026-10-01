@@ -84,6 +84,12 @@ body {
   visibility: visible;
 }
 
+.form-error-message {
+  min-height: 18px;
+  height: auto;
+  margin-top: -22px;
+}
+
 .agreement-container {
   width: 563px;
   display: flex;

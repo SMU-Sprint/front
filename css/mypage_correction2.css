@@ -152,6 +152,19 @@
   font-size: 30px;
   border-radius: 90px;
 }
+.correction-error-message {
+  width: 860px;
+  min-height: 22px;
+  margin-top: 18px;
+  color: #ff7f00;
+  font-size: 16px;
+  line-height: 1.45;
+  text-align: center;
+  visibility: hidden;
+}
+.correction-error-message.show {
+  visibility: visible;
+}
 @media (max-width: 760px) {
   .correction-form {
     padding: 30px 18px 110px;
@@ -169,5 +182,9 @@
   }
   .correction-form button {
     margin-top: 70px;
+  }
+  .correction-error-message {
+    width: 100%;
+    font-size: 14px;
   }
 }

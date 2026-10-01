@@ -29,7 +29,12 @@ window.WorkoutUI = (() => {
   function time(value) {
     return value ? new Date(value).toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--';
   }
+  function durationWithoutSeconds(seconds) {
+    const n = Math.max(0, Math.floor(seconds));
+    const pad = value => String(value).padStart(2, '0');
+    return `${pad(Math.floor(n / 3600))}:${pad(Math.floor(n / 60) % 60)}`;
+  }
   document.querySelectorAll('[data-demo-note]').forEach(el => { el.hidden = !service.demo; });
   updateDate(); setInterval(updateDate, 1000);
-  return { service, dateKey, duration, time, message };
+  return { service, dateKey, duration, durationWithoutSeconds, time, message };
 })();
